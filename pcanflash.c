@@ -54,6 +54,7 @@ void print_usage(char *prg)
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
 	fprintf(stderr, "Options:              -f <file.bin>\n");
 	fprintf(stderr, "                      -i <module_id>\n");
+	fprintf(stderr, "                      -x (disable alternating XOR flip of flash data)\n");
 	fprintf(stderr, "                      -v (increase verbosity level)\n");
 	fprintf(stderr, "\n");
 }
@@ -68,13 +69,14 @@ int main(int argc, char **argv)
 	static FILE *infile;
 	static int verbose;
 	int module_id = NO_MODULE_ID;
+	int alternating_xor_flip = 1; /* default is enabled */
 	int opt, i;
 	size_t fret;
 	long foffset;
 	int entries;
 	crc_array_t *ca;
 
-	while ((opt = getopt(argc, argv, "f:i:v?")) != -1) {
+	while ((opt = getopt(argc, argv, "f:i:xv?")) != -1) {
 		switch (opt) {
 		case 'f':
 			infile = fopen(optarg, "r");
@@ -86,6 +88,10 @@ int main(int argc, char **argv)
 
 		case 'i':
 			module_id = strtoul(optarg, NULL, 10);
+			break;
+
+		case 'x':
+			alternating_xor_flip = 0;
 			break;
 
 		case 'v':
@@ -194,7 +200,7 @@ int main(int argc, char **argv)
 			if (i != BLKSZ) {
 
 				/* write non-empty block */
-				write_block(s, module_id, foffset, BLKSZ, buf);
+				write_block(s, module_id, foffset, BLKSZ, buf, alternating_xor_flip);
 			}
 		} else {
 			printf ("\ngot final block at offset 0x%X with %lu bytes\n", (unsigned int)foffset, fret);
@@ -212,7 +218,7 @@ int main(int argc, char **argv)
 			printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
 			       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
 
-			write_block(s, module_id, foffset, fret, buf);
+			write_block(s, module_id, foffset, fret, buf, alternating_xor_flip);
 			break;
 			
 		}
