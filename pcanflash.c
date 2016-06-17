@@ -143,7 +143,8 @@ int main(int argc, char **argv)
 			       modules[i].data[6] >> 5, modules[i].data[6] & 0x1F);
 
 			get_status(s, i, &cf);
-			hw_type = cf.data[3];
+			/* store hw_type for this module_id index in data[7] */
+			modules[i].data[7] = cf.data[3];
 			printf("             - hardware %d (%s) flash type %d (%s)\n",
 			       hw_type, hw_name(hw_type), cf.data[4], flash_name(cf.data[4]));
 		}
@@ -169,6 +170,9 @@ int main(int argc, char **argv)
 		fprintf(stderr, "module id not found in module list!\n");
 		exit(1);
 	}
+
+	/* restore hw_type of this module_id index from data[7] */
+	hw_type = modules[module_id].data[7];
 
 	printf("\nflashing module id : %d\n", module_id);
 
