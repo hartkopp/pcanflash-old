@@ -25,7 +25,15 @@
  *
  */
 
+#include <stdio.h>
 #include <stdint.h>
 
 char *hw_name(uint8_t hw_type);
 char *flash_name(uint8_t flash_type);
+int num_flashblocks(uint8_t hw_type);
+void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
+
+typedef struct {
+	uint32_t start;
+	uint32_t len;
+} fblock_t;

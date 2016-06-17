@@ -55,4 +55,3 @@ typedef struct {
 	uint16_t	count;
 	block_t		block[1];
 } __attribute__((packed)) crc_array_t;
-

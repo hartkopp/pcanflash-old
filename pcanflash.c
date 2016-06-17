@@ -71,6 +71,7 @@ int main(int argc, char **argv)
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip = 1; /* default is enabled */
 	int opt, i;
+	uint8_t hw_type = 0;
 	size_t fret;
 	long foffset;
 	int entries;
@@ -147,8 +148,9 @@ int main(int argc, char **argv)
 			       modules[i].data[6] >> 5, modules[i].data[6] & 0x1F);
 
 			get_status(s, i, &cf);
+			hw_type = cf.data[3];
 			printf("             - hardware %d (%s) flash type %d (%s)\n",
-			       cf.data[3], hw_name(cf.data[3]), cf.data[4], flash_name(cf.data[4]));
+			       hw_type, hw_name(hw_type), cf.data[4], flash_name(cf.data[4]));
 		}
 	}
 
@@ -177,9 +179,15 @@ int main(int argc, char **argv)
 
 	printf("\nerasing flash sectors:\n");
 
-	erase_block(s, module_id, 0x002000, 0x002000);
-	erase_block(s, module_id, 0x03C000, 0x002000);
-	
+	entries = num_flashblocks(hw_type);
+	if (!(entries)) {
+		fprintf(stderr, "no flashblocks found for hardware type %d (%s)!\n",
+			hw_type, hw_name(hw_type));
+		exit(1);
+	}
+	for (i = 0; i < entries; i++)
+		erase_flashblocks(s, infile, module_id, hw_type, i);
+
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
 
