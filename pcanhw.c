@@ -30,7 +30,121 @@
 #include "pcanhw.h"
 #include "pcanfunc.h"
 
-fblock_t hw16[] = {
+const fblock_t hw4[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw16[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw19[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw21[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw25[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw31[] = {
+	{0x2000, 0x2000},
+	{0x4000, 0x2000},
+	{0x6000, 0x2000},
+	{0x8000, 0x2000},
+	{0xA000, 0x2000},
+	{0xC000, 0x2000},
+	{0xE000, 0x2000},
+	{0x10000, 0x10000},
+	{0x20000, 0x10000},
+	{0x30000, 0x2000},
+	{0x32000, 0x2000},
+	{0x34000, 0x2000},
+	{0x36000, 0x2000},
+	{0x38000, 0x2000},
+	{0x3A000, 0x2000},
+	{0x3C000, 0x2000}
+};
+
+const fblock_t hw35[] = {
 	{0x2000, 0x2000},
 	{0x4000, 0x2000},
 	{0x6000, 0x2000},
@@ -134,9 +248,37 @@ char *flash_name(uint8_t flash_type)
 int num_flashblocks(uint8_t hw_type)
 {
 	switch (hw_type) {
+# if 0
+	case 4:
+		/* PCAN-MicroMod */
+		return sizeof(hw4) / sizeof(hw4[0]);
+		break;
+#endif
 	case 16:
 		/* PCAN-Router */
 		return sizeof(hw16) / sizeof(hw16[0]);
+		break;
+#if 0
+	case 19:
+		/* PCAN-MIO (32-bit) */
+		return sizeof(hw19) / sizeof(hw19[0]);
+		break;
+	case 21:
+		/* MU-Thermocouple1 CAN */
+		return sizeof(hw21) / sizeof(hw21[0]);
+		break;
+#endif
+	case 25:
+		/* PCAN-Router Pro */
+		return sizeof(hw25) / sizeof(hw25[0]);
+		break;
+	case 31:
+		/* PCAN-RS-232 */
+		return sizeof(hw31) / sizeof(hw31[0]);
+		break;
+	case 35:
+		/* PCAN-Router DR */
+		return sizeof(hw35) / sizeof(hw35[0]);
 		break;
 	default:
 		return 0;
@@ -150,10 +292,40 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 	int i;
 
 	switch (hw_type) {
+	case 4:
+		/* PCAN-MicroMod */
+		startaddr = hw4[index].start;
+		blksz = hw4[index].len;
+		break;
 	case 16:
 		/* PCAN-Router */
 		startaddr = hw16[index].start;
 		blksz = hw16[index].len;
+		break;
+	case 19:
+		/* PCAN-MIO (32-bit) */
+		startaddr = hw19[index].start;
+		blksz = hw19[index].len;
+		break;
+	case 21:
+		/* MU-Thermocouple1 CAN */
+		startaddr = hw21[index].start;
+		blksz = hw21[index].len;
+		break;
+	case 25:
+		/* PCAN-Router Pro */
+		startaddr = hw25[index].start;
+		blksz = hw25[index].len;
+		break;
+	case 31:
+		/* PCAN-RS-232 */
+		startaddr = hw31[index].start;
+		blksz = hw31[index].len;
+		break;
+	case 35:
+		/* PCAN-Router DR */
+		startaddr = hw35[index].start;
+		blksz = hw35[index].len;
 		break;
 	default:
 		fprintf(stderr, "bad flashblocks entry found for hardware type %d (%s)!\n",
