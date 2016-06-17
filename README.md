@@ -17,4 +17,5 @@ As there's no flow control when a flash block is transferred the tx-queue-len sh
 E.g.
 
 ip link set can0 up type can bitrate 500000
+
 ip link set can0 txqueuelen 500
