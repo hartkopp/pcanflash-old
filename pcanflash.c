@@ -193,11 +193,11 @@ int main(int argc, char **argv)
 		fread(buf, 1, BLKSZ, infile);
 
 		for (i = 0; i < BLKSZ; i++) {
-			if (buf[i] != 0xFFU)
+			if (buf[i] != EMPTY)
 				break;
 		}
 
-		/* non-empty block (not all bytes are 0xFFU) */
+		/* non-empty block (not all bytes are EMPTY / 0xFFU) */
 		if (i != BLKSZ) {
 
 			uint32_t crc_start = crc_startpos(hw_type);

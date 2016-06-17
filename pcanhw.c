@@ -341,11 +341,11 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 			/* file ended but was empty so far -> no action */
 			return;
 		}
-		if (data != 0xFFU)
+		if (data != EMPTY)
 			break;
 	}
 
-	/* empty block (all bytes are 0xFFU) -> no action */
+	/* empty block (all bytes are EMPTY / 0xFFU) -> no action */
 	if (i == blksz)
 		return;
 

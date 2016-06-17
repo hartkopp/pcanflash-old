@@ -28,6 +28,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* empty flash content -> all bits are set */
+#define EMPTY 0xFFU
+
 uint32_t crc_startpos(uint8_t hw_type);
 int get_hw_xor_flip(uint8_t hw_type);
 char *hw_name(uint8_t hw_type);
