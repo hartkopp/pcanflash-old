@@ -71,6 +71,28 @@ uint32_t crc_startpos(uint8_t hw_type)
 	}
 }
 
+int get_hw_xor_flip(uint8_t hw_type)
+{
+	switch (hw_type) {
+	case 4:
+		return 1; /* PCAN-MicroMod */
+	case 16:
+		return 1; /* PCAN-Router */
+	case 19:
+		return 1; /* PCAN-MIO (32-bit) */
+	case 21:
+		return 1; /* MU-Thermocouple1 CAN */
+	case 25:
+		return 1; /* PCAN-Router Pro */
+	case 31:
+		return 1; /* PCAN-RS-232 */
+	case 35:
+		return 1; /* PCAN-Router DR */
+	default:
+		return 1; /* enabled by default */
+	}
+}
+
 char *hw_name(uint8_t hw_type)
 {
 	switch (hw_type) {

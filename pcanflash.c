@@ -54,7 +54,6 @@ void print_usage(char *prg)
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
 	fprintf(stderr, "Options:              -f <file.bin>\n");
 	fprintf(stderr, "                      -i <module_id>\n");
-	fprintf(stderr, "                      -x (disable alternating XOR flip of flash data)\n");
 	fprintf(stderr, "                      -v (increase verbosity level)\n");
 	fprintf(stderr, "\n");
 }
@@ -69,14 +68,14 @@ int main(int argc, char **argv)
 	static FILE *infile;
 	static int verbose;
 	int module_id = NO_MODULE_ID;
-	int alternating_xor_flip = 1; /* default is enabled */
+	int alternating_xor_flip;
 	int opt, i;
 	uint8_t hw_type = 0;
 	long foffset;
 	int entries;
 	crc_array_t *ca;
 
-	while ((opt = getopt(argc, argv, "f:i:xv?")) != -1) {
+	while ((opt = getopt(argc, argv, "f:i:v?")) != -1) {
 		switch (opt) {
 		case 'f':
 			infile = fopen(optarg, "r");
@@ -88,10 +87,6 @@ int main(int argc, char **argv)
 
 		case 'i':
 			module_id = strtoul(optarg, NULL, 10);
-			break;
-
-		case 'x':
-			alternating_xor_flip = 0;
 			break;
 
 		case 'v':
@@ -189,6 +184,7 @@ int main(int argc, char **argv)
 
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
+	alternating_xor_flip = get_hw_xor_flip(hw_type);
 
 	while (1) {
 
