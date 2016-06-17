@@ -69,6 +69,7 @@ int main(int argc, char **argv)
 	static int verbose;
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip;
+	uint32_t crc_start;
 	int opt, i;
 	uint8_t hw_type = 0;
 	long foffset;
@@ -185,6 +186,7 @@ int main(int argc, char **argv)
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
 	alternating_xor_flip = get_hw_xor_flip(hw_type);
+	crc_start = crc_startpos(hw_type);
 
 	while (1) {
 
@@ -199,8 +201,6 @@ int main(int argc, char **argv)
 
 		/* non-empty block (not all bytes are EMPTY / 0xFFU) */
 		if (i != BLKSZ) {
-
-			uint32_t crc_start = crc_startpos(hw_type);
 
 			/* check whether we need to patch the CRC array */
 			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + BLKSZ)) {
