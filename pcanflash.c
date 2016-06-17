@@ -72,7 +72,6 @@ int main(int argc, char **argv)
 	int alternating_xor_flip = 1; /* default is enabled */
 	int opt, i;
 	uint8_t hw_type = 0;
-	size_t fret;
 	long foffset;
 	int entries;
 	crc_array_t *ca;
@@ -193,42 +192,40 @@ int main(int argc, char **argv)
 
 	while (1) {
 
+		memset(&buf, 0xFF, sizeof(buf));
 		fseek(infile, foffset, SEEK_SET);
-	
-		fret = fread(buf, 1, BLKSZ, infile);
+		fread(buf, 1, BLKSZ, infile);
 
-		if (fret == BLKSZ) {
+		for (i = 0; i < BLKSZ; i++) {
+			if (buf[i] != 0xFFU)
+				break;
+		}
 
-			for (i = 0; i < BLKSZ; i++) {
-				if (buf[i] != 0xFFU)
-					break;
+		/* non-empty block (not all bytes are 0xFFU) */
+		if (i != BLKSZ) {
+
+			uint32_t crc_start = crc_startpos(hw_type);
+
+			/* check whether we need to patch the CRC array */
+			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + BLKSZ)) {
+
+				/* access crc_array */
+				ca = (crc_array_t *)&buf[crc_start - foffset];
+
+				printf("str=%s ver=0x%X D/M/Y=%d/%d/%d mode=%d count=%d\n",
+				       ca->str, ca->version, ca->day, ca->month, ca->year,
+				       ca->mode, ca->count);
+				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
+				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
+
+				ca->block[0].crc = calc_crc16(infile, ca->block[0].address, ca->block[0].len);
+
+				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
+				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
 			}
 
-			/* non-empty block (not all bytes are 0xFFU) */
-			if (i != BLKSZ) {
-
-				/* write non-empty block */
-				write_block(s, module_id, foffset, BLKSZ, buf, alternating_xor_flip);
-			}
-		} else {
-			printf ("\ngot final block at offset 0x%X with %lu bytes\n", (unsigned int)foffset, fret);
-
-			/* access crc_array */
-			ca = (crc_array_t *)&buf[0x100];
-
-			printf("str=%s ver=0x%X D/M/Y=%d/%d/%d mode=%d count=%d\n", ca->str, ca->version,
-			       ca->day, ca->month, ca->year, ca->mode, ca->count);
-			printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
-			       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
-
-			ca->block[0].crc = calc_crc16(infile, ca->block[0].address, ca->block[0].len);
-
-			printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
-			       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
-
-			write_block(s, module_id, foffset, fret, buf, alternating_xor_flip);
-			break;
-			
+			/* write non-empty block */
+			write_block(s, module_id, foffset, BLKSZ, buf, alternating_xor_flip);
 		}
 
 		if (feof(infile))

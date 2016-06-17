@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+uint32_t crc_startpos(uint8_t hw_type);
 char *hw_name(uint8_t hw_type);
 char *flash_name(uint8_t flash_type);
 int num_flashblocks(uint8_t hw_type);

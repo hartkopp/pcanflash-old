@@ -49,6 +49,28 @@ fblock_t hw16[] = {
 	{0x3C000, 0x2000}
 };
 
+uint32_t crc_startpos(uint8_t hw_type)
+{
+	switch (hw_type) {
+	case 4:
+		return 0; /* PCAN-MicroMod */
+	case 16:
+		return 0x03DF00; /* PCAN-Router */
+	case 19:
+		return 0xFF9000; /* PCAN-MIO (32-bit) */
+	case 21:
+		return 0x002000; /* MU-Thermocouple1 CAN */
+	case 25:
+		return 0x03DF00; /* PCAN-Router Pro */
+	case 31:
+		return 0x03DF00; /* PCAN-RS-232 */
+	case 35:
+		return 0x03DF00; /* PCAN-Router DR */
+	default:
+		return 0; /* disabled */
+	}
+}
+
 char *hw_name(uint8_t hw_type)
 {
 	switch (hw_type) {
