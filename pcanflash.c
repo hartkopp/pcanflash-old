@@ -146,7 +146,7 @@ int main(int argc, char **argv)
 			/* store hw_type for this module_id index in data[7] */
 			modules[i].data[7] = cf.data[3];
 			printf("             - hardware %d (%s) flash type %d (%s)\n",
-			       hw_type, hw_name(hw_type), cf.data[4], flash_name(cf.data[4]));
+			       cf.data[3], hw_name(cf.data[3]), cf.data[4], flash_name(cf.data[4]));
 		}
 	}
 
