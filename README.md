@@ -8,6 +8,8 @@ http://www.peak-system.com/forum/viewtopic.php?f=34&t=1112
 
 This programm is currently tested with the PCAN Router IPEH-002210 with the binary files from the 1_ROUTING example.
 
+See announcement at http://www.peak-system.com/forum/viewtopic.php?f=34&t=1818
+
 So this software is at least BETA! Stay tuned :-)
 
 # REMARK
