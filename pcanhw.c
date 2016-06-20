@@ -303,7 +303,8 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 	}
 
 	/* check block in bin-file */
-	fseek(infile, fblock->start, SEEK_SET);
+	if (fseek(infile, fblock->start, SEEK_SET))
+		return;
 
 	for (i = 0; i < fblock->len; i++) {
 		if (fread(&data, 1, 1, infile) != 1) {
