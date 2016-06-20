@@ -218,7 +218,10 @@ int main(int argc, char **argv)
 				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
 				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
 
-				ca->block[0].crc = calc_crc16(infile, ca->block[0].address, ca->block[0].len);
+				if (!strcmp((const char *)ca->str, CRC_IDENT_STRING))
+					ca->block[0].crc = calc_crc16(infile, ca->block[0].address, ca->block[0].len);
+				else
+					fprintf(stderr, "no CRC Ident string found - omit  patching of CRC value.\n");
 
 				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
 				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);

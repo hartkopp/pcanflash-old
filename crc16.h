@@ -30,6 +30,8 @@
 
 #include <stdio.h>
 
+#define CRC_IDENT_STRING "CRC-Arrays"
+
 uint16_t calc_crc16(FILE *infile, uint32_t address, uint32_t len);
 
 #endif
