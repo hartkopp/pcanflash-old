@@ -27,6 +27,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pcanhw.h"
 #include "pcanfunc.h"
 
@@ -320,4 +321,37 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 		return;
 
 	erase_block(s, module_id, fblock->start, fblock->len);
+}
+
+int check_ch_name(FILE *infile, uint8_t hw_type)
+{
+	const hw_t *hwt = get_hw(hw_type);
+	char buf[HW_NAME_MAX_LEN + 2];
+
+	memset(buf, 0, sizeof(buf));
+
+	if (!hwt)
+		return 1;
+
+	rewind(infile);
+
+	while (1) {
+
+		if (fread(buf, 1, 1, infile) != 1)
+			return 1;
+
+		/* PCAN devices always start with 'P' */
+		if (buf[0] != 'P')
+			continue;
+
+		if (fread(&buf[1], 1, HW_NAME_MAX_LEN - 1, infile) != HW_NAME_MAX_LEN - 1)
+			return 1;
+
+		if (!strncmp(buf, hwt->ch_file, HW_NAME_MAX_LEN))
+			return 0; /* match */
+
+		/* no match -> rewind back behind the 'P' */
+		if (fseek(infile, ftell(infile) - (HW_NAME_MAX_LEN - 1), SEEK_SET))
+			return 1;
+	}
 }

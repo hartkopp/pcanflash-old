@@ -37,15 +37,18 @@ const char *hw_name(uint8_t hw_type);
 const char *flash_name(uint8_t flash_type);
 int num_flashblocks(uint8_t hw_type);
 void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
+int check_ch_name(FILE *infile, uint8_t hw_type);
 
 typedef struct {
 	uint32_t start;
 	uint32_t len;
 } fblock_t;
 
+#define HW_NAME_MAX_LEN 24
+
 typedef struct {
-	const char name[24];
-	const char ch_file[24];
+	const char name[HW_NAME_MAX_LEN];
+	const char ch_file[HW_NAME_MAX_LEN];
 	const int fdata_invert;
 	const uint32_t crc_startpos;
 	const int num_flashblocks;

@@ -174,6 +174,12 @@ int main(int argc, char **argv)
 	/* restore hw_type of this module_id index from data[7] */
 	hw_type = modules[module_id].data[7];
 
+	if (check_ch_name(infile, hw_type)) {
+		fprintf(stderr, "\nno ch_filename in bin-file for hardware type %d (%s)!\n",
+			hw_type, hw_name(hw_type));
+		exit(1);
+	}
+
 	printf("\nflashing module id : %d\n", module_id);
 
 	printf("\nerasing flash sectors:\n");
