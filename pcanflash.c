@@ -194,8 +194,10 @@ int main(int argc, char **argv)
 
 	while (1) {
 
+		if (fseek(infile, foffset, SEEK_SET))
+			break;
+
 		memset(&buf, 0xFF, sizeof(buf));
-		fseek(infile, foffset, SEEK_SET);
 		fread(buf, 1, BLKSZ, infile);
 
 		for (i = 0; i < BLKSZ; i++) {
