@@ -33,8 +33,8 @@
 
 uint32_t crc_startpos(uint8_t hw_type);
 int get_hw_xor_flip(uint8_t hw_type);
-char *hw_name(uint8_t hw_type);
-char *flash_name(uint8_t flash_type);
+const char *hw_name(uint8_t hw_type);
+const char *flash_name(uint8_t flash_type);
 int num_flashblocks(uint8_t hw_type);
 void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
 
@@ -42,3 +42,12 @@ typedef struct {
 	uint32_t start;
 	uint32_t len;
 } fblock_t;
+
+typedef struct {
+	const char name[24];
+	const char ch_file[24];
+	const int fdata_invert;
+	const uint32_t crc_startpos;
+	const int num_flashblocks;
+	const fblock_t *flashblocks;
+} hw_t;

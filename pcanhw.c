@@ -30,6 +30,8 @@
 #include "pcanhw.h"
 #include "pcanfunc.h"
 
+/* flash block layouts */
+
 const fblock_t hw4[] = {
 	{0x2000, 0x2000},
 	{0x4000, 0x2000},
@@ -69,41 +71,9 @@ const fblock_t hw16[] = {
 };
 
 const fblock_t hw19[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
 
 const fblock_t hw21[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
 
 const fblock_t hw25[] = {
@@ -145,22 +115,6 @@ const fblock_t hw31[] = {
 };
 
 const fblock_t hw34[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
 
 const fblock_t hw35[] = {
@@ -183,153 +137,132 @@ const fblock_t hw35[] = {
 };
 
 const fblock_t hw36[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
 
 const fblock_t hw37[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
 
 const fblock_t hw40[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
 };
+
+/* hardware type descriptions */
+
+const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
+		   1, 0,
+		   sizeof(hw4) / sizeof(fblock_t),
+		   hw4};
+
+const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
+		   1, 0x03DF00,
+		   sizeof(hw16) / sizeof(fblock_t),
+		   hw16};
+
+const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
+		   1, 0xFF9000,
+		   sizeof(hw19) / sizeof(fblock_t),
+		   hw19};
+
+const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
+		   1, 0x002000,
+		   sizeof(hw21) / sizeof(fblock_t),
+		   hw21};
+
+const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
+		   1, 0x03DF00,
+		   sizeof(hw25) / sizeof(fblock_t),
+		   hw25};
+
+const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
+		   1, 0x03DF00,
+		   sizeof(hw31) / sizeof(fblock_t),
+		   hw31};
+
+const hw_t hwt34 = {"PCAN-USB Pro FD", "PCAN-USB_PRO_FD",
+		   1, 0x000100,
+		   sizeof(hw34) / sizeof(fblock_t),
+		   hw34};
+
+const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
+		   1, 0x03DF00,
+		   sizeof(hw35) / sizeof(fblock_t),
+		   hw35};
+
+const hw_t hwt36 = {"PCAN-USB FD", "PCAN-USB_FD",
+		   1, 0x000100,
+		   sizeof(hw36) / sizeof(fblock_t),
+		   hw36};
+
+const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
+		   1, 0x000100,
+		   sizeof(hw37) / sizeof(fblock_t),
+		   hw37};
+
+const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
+		   1, 0,
+		   sizeof(hw40) / sizeof(fblock_t),
+		   hw40};
+
+/* index table for fast hw_type referencing */
+
+const hw_t *hwtab[] =
+{
+	NULL,	NULL,	NULL,	NULL,	&hwt4,	NULL,	NULL,	NULL,
+	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
+	&hwt16,	NULL,	NULL,	&hwt19,	NULL,	&hwt21,	NULL,	NULL,
+	NULL,	&hwt25,	NULL,	NULL,	NULL,	NULL,	NULL,	&hwt31,
+	NULL,	NULL,	&hwt34,	&hwt35,	&hwt36,	&hwt37,	NULL,	NULL,
+	&hwt40
+};
+
+const hw_t *get_hw(uint8_t hw_type)
+{
+	if (hw_type > 40)
+		return NULL; /* unknown */
+
+	return hwtab[hw_type];
+}
 
 uint32_t crc_startpos(uint8_t hw_type)
 {
-	switch (hw_type) {
-	case 4:
-		return 0; /* PCAN-MicroMod */
-	case 16:
-		return 0x03DF00; /* PCAN-Router */
-	case 19:
-		return 0xFF9000; /* PCAN-MIO (32-bit) */
-	case 21:
-		return 0x002000; /* MU-Thermocouple1 CAN */
-	case 25:
-		return 0x03DF00; /* PCAN-Router Pro */
-	case 31:
-		return 0x03DF00; /* PCAN-RS-232 */
-	case 34:
-		return 0x000100; /* PCAN-USB pro FD */
-	case 35:
-		return 0x03DF00; /* PCAN-Router DR */
-	case 36:
-		return 0x000100; /* PCAN-USB FD */
-	case 37:
-		return 0x000100; /* PCAN-GPS */
-	case 40:
-		return 0; /* PCAN-Router FD */
-	default:
-		return 0; /* disabled */
-	}
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		return hwt->crc_startpos;
+
+	return 0; /* disabled */
 }
 
 int get_hw_xor_flip(uint8_t hw_type)
 {
-	switch (hw_type) {
-	case 4:
-		return 1; /* PCAN-MicroMod */
-	case 16:
-		return 1; /* PCAN-Router */
-	case 19:
-		return 1; /* PCAN-MIO (32-bit) */
-	case 21:
-		return 1; /* MU-Thermocouple1 CAN */
-	case 25:
-		return 1; /* PCAN-Router Pro */
-	case 31:
-		return 1; /* PCAN-RS-232 */
-	case 34:
-		return 1; /* PCAN-USB Pro FD */
-	case 35:
-		return 1; /* PCAN-Router DR */
-	case 36:
-		return 1; /* PCAN-USB FD */
-	case 37:
-		return 1; /* PCAN-GPS */
-	case 40:
-		return 1; /* PCAN-Router FD */
-	default:
-		return 1; /* enabled by default */
-	}
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		return hwt->fdata_invert;
+
+	return 1; /* enabled by default */
 }
 
-char *hw_name(uint8_t hw_type)
+const char *hw_name(uint8_t hw_type)
 {
-	switch (hw_type) {
-	case 4:
-		return "PCAN-MicroMod";
-	case 16:
-		return "PCAN-Router";
-	case 19:
-		return "PCAN-MIO (32-bit)";
-	case 21:
-		return "MU-Thermocouple1 CAN";
-	case 25:
-		return "PCAN-Router Pro";
-	case 31:
-		return "PCAN-RS-232";
-	case 34:
-		return "PCAN-USB Pro FD";
-	case 35:
-		return "PCAN-Router DR";
-	case 36:
-		return "PCAN-USB FD";
-	case 37:
-		return "PCAN-GPS";
-	case 40:
-		return "PCAN-Router FD";
-	default:
-		return "unkown";
-	}
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		return hwt->name;
+
+	return "unkown";
 }
 
-char *flash_name(uint8_t flash_type)
+int num_flashblocks(uint8_t hw_type)
+{
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		return hwt->num_flashblocks;
+
+	return 0;
+}
+
+const char *flash_name(uint8_t flash_type)
 {
 	switch (flash_type) {
 	case 4:
@@ -353,138 +286,26 @@ char *flash_name(uint8_t flash_type)
 	}
 }
 
-int num_flashblocks(uint8_t hw_type)
-{
-	switch (hw_type) {
-# if 0
-	case 4:
-		/* PCAN-MicroMod */
-		return sizeof(hw4) / sizeof(hw4[0]);
-		break;
-#endif
-	case 16:
-		/* PCAN-Router */
-		return sizeof(hw16) / sizeof(hw16[0]);
-		break;
-#if 0
-	case 19:
-		/* PCAN-MIO (32-bit) */
-		return sizeof(hw19) / sizeof(hw19[0]);
-		break;
-	case 21:
-		/* MU-Thermocouple1 CAN */
-		return sizeof(hw21) / sizeof(hw21[0]);
-		break;
-#endif
-	case 25:
-		/* PCAN-Router Pro */
-		return sizeof(hw25) / sizeof(hw25[0]);
-		break;
-	case 31:
-		/* PCAN-RS-232 */
-		return sizeof(hw31) / sizeof(hw31[0]);
-		break;
-#if 0
-	case 34:
-		/* PCAN-USB Pro FD */
-		return sizeof(hw34) / sizeof(hw34[0]);
-		break;
-#endif
-	case 35:
-		/* PCAN-Router DR */
-		return sizeof(hw35) / sizeof(hw35[0]);
-		break;
-#if 0
-	case 36:
-		/* PCAN-USB FD */
-		return sizeof(hw36) / sizeof(hw36[0]);
-		break;
-	case 37:
-		/* PCAN-GPS */
-		return sizeof(hw37) / sizeof(hw37[0]);
-		break;
-	case 40:
-		/* PCAN-Router FD */
-		return sizeof(hw40) / sizeof(hw40[0]);
-		break;
-#endif
-	default:
-		return 0;
-	}
-}
-
 void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index)
 {
-	uint32_t startaddr, blksz;
+	const fblock_t *fblock;
 	uint8_t data;
 	int i;
 
-	switch (hw_type) {
-	case 4:
-		/* PCAN-MicroMod */
-		startaddr = hw4[index].start;
-		blksz = hw4[index].len;
-		break;
-	case 16:
-		/* PCAN-Router */
-		startaddr = hw16[index].start;
-		blksz = hw16[index].len;
-		break;
-	case 19:
-		/* PCAN-MIO (32-bit) */
-		startaddr = hw19[index].start;
-		blksz = hw19[index].len;
-		break;
-	case 21:
-		/* MU-Thermocouple1 CAN */
-		startaddr = hw21[index].start;
-		blksz = hw21[index].len;
-		break;
-	case 25:
-		/* PCAN-Router Pro */
-		startaddr = hw25[index].start;
-		blksz = hw25[index].len;
-		break;
-	case 31:
-		/* PCAN-RS-232 */
-		startaddr = hw31[index].start;
-		blksz = hw31[index].len;
-		break;
-	case 34:
-		/* PCAN-USB Pro FD */
-		startaddr = hw34[index].start;
-		blksz = hw34[index].len;
-		break;
-	case 35:
-		/* PCAN-Router DR */
-		startaddr = hw35[index].start;
-		blksz = hw35[index].len;
-		break;
-	case 36:
-		/* PCAN-USB FD */
-		startaddr = hw36[index].start;
-		blksz = hw36[index].len;
-		break;
-	case 37:
-		/* PCAN-GPS */
-		startaddr = hw37[index].start;
-		blksz = hw37[index].len;
-		break;
-	case 40:
-		/* PCAN-Router FD */
-		startaddr = hw40[index].start;
-		blksz = hw40[index].len;
-		break;
-	default:
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		fblock = &hwt->flashblocks[index];
+	else {
 		fprintf(stderr, "bad flashblocks entry found for hardware type %d (%s)!\n",
 			hw_type, hw_name(hw_type));
 		exit(1);
 	}
 
 	/* check block in bin-file */
-	fseek(infile, startaddr, SEEK_SET);
+	fseek(infile, fblock->start, SEEK_SET);
 
-	for (i = 0; i < blksz; i++) {
+	for (i = 0; i < fblock->len; i++) {
 		if (fread(&data, 1, 1, infile) != 1) {
 			/* file ended but was empty so far -> no action */
 			return;
@@ -494,8 +315,8 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 	}
 
 	/* empty block (all bytes are EMPTY / 0xFFU) -> no action */
-	if (i == blksz)
+	if (i == fblock->len)
 		return;
 
-	erase_block(s, module_id, startaddr, blksz);
+	erase_block(s, module_id, fblock->start, fblock->len);
 }
