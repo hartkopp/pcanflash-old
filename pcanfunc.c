@@ -323,6 +323,7 @@ void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint
 	status = get_status(s, module_id, NULL);
 	if (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH | SET_CHECKSUM)) {
 		fprintf(stderr, "flash4 - wrong status %02X!\n", status);
+		fprintf(stderr, "Please check CAN netdevice tx-queue-len to avoid block data loss.\n");
 		exit(1);
 	}
 	
