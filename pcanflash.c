@@ -219,20 +219,20 @@ int main(int argc, char **argv)
 
 				/* access crc_array */
 				ca = (crc_array_t *)&buf[crc_start - foffset];
+				if (!strcmp((const char *)ca->str, CRC_IDENT_STRING)) {
+					printf(" CRC array ver=0x%X D/M/Y=%d/%d/%d mode=%d found at 0x%X\n",
+					       ca->version, ca->day, ca->month, ca->year, ca->mode, crc_start);
 
-				printf("str=%s ver=0x%X D/M/Y=%d/%d/%d mode=%d count=%d\n",
-				       ca->str, ca->version, ca->day, ca->month, ca->year,
-				       ca->mode, ca->count);
-				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
-				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
-
-				if (!strcmp((const char *)ca->str, CRC_IDENT_STRING))
-					ca->block[0].crc = calc_crc16(infile, ca->block[0].address, ca->block[0].len);
-				else
-					fprintf(stderr, "no CRC Ident string found - omit  patching of CRC value.\n");
-
-				printf("block[0] .address=0x%X  .len=0x%X  .crc=0x%X\n",
-				       ca->block[0].address, ca->block[0].len, ca->block[0].crc);
+					if ((ca->mode == 1) || (ca->mode == 3) || (ca->mode == 4)) {
+						for (i = 0; i < ca->count; i++) {
+							ca->block[i].crc = calc_crc16(infile, ca->block[i].address, ca->block[i].len);
+							printf(" CRC block[%d] .address=0x%X  .len=0x%X  .crc=0x%X\n",
+							       i, ca->block[i].address, ca->block[i].len, ca->block[i].crc);
+						}
+					} else
+						printf(" CRC array mode=%d is not supported - omit  patching of CRC value.\n", ca->mode);
+				} else
+					fprintf(stderr, " no CRC Ident string found - omit  patching of CRC value.\n");
 			}
 
 			/* write non-empty block */
