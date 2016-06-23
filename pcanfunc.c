@@ -321,8 +321,7 @@ void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint
 	
 	set_checksum(s, module_id, csum);
 	status = get_status(s, module_id, NULL);
-	if ((status & (SET_STARTADDR | SET_LENGTH | SET_CHECKSUM)) !=
-	    (SET_STARTADDR | SET_LENGTH | SET_CHECKSUM)) {
+	if (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH | SET_CHECKSUM)) {
 		fprintf(stderr, "flash4 - wrong status %02X!\n", status);
 		exit(1);
 	}
