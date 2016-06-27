@@ -54,7 +54,7 @@ void print_usage(char *prg)
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
 	fprintf(stderr, "Options:              -f <file.bin>\n");
 	fprintf(stderr, "                      -i <module_id>\n");
-	fprintf(stderr, "                      -v (increase verbosity level)\n");
+	fprintf(stderr, "                      -q (just query modules and quit)\n");
 	fprintf(stderr, "\n");
 }
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         struct can_filter rfilter;
 	int s; /* CAN_RAW socket */
 	static FILE *infile;
-	static int verbose;
+	static int query;
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip;
 	uint32_t crc_start;
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	int entries;
 	crc_array_t *ca;
 
-	while ((opt = getopt(argc, argv, "f:i:v?")) != -1) {
+	while ((opt = getopt(argc, argv, "f:i:q?")) != -1) {
 		switch (opt) {
 		case 'f':
 			infile = fopen(optarg, "r");
@@ -90,8 +90,8 @@ int main(int argc, char **argv)
 			module_id = strtoul(optarg, NULL, 10);
 			break;
 
-		case 'v':
-			verbose++;
+		case 'q':
+			query = 1;
 			break;
 
 		case '?':
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-        if ((argc - optind) != 1 || (!infile)) {
+        if ((argc - optind) != 1 || (infile && query) || (!(infile || query))) {
                 print_usage(basename(argv[0]));
                 exit(0);
         }
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 	}
 
 	/* print module list */
-	printf("\nfound modules:\n");
+	printf("\nfound modules:\n\n");
 	for (i = 0; i < 16; i++) {
 		if (modules[i].can_id) {
 			struct can_frame cf;
@@ -150,6 +150,11 @@ int main(int argc, char **argv)
 		}
 	}
 
+	if (query) {
+		printf("\n");
+		return 0;
+	}
+
 	if (module_id == NO_MODULE_ID) {
 		if (entries == 1) {
 			/* catch first and only module */
@@ -160,14 +165,14 @@ int main(int argc, char **argv)
 				}
 			}
 		} else {
-			printf("multiple modules found - please provide module id : ");
+			printf("\nmultiple modules found - please provide module id : ");
 			scanf("%d", &module_id);
 			module_id &= 0xF;
 		}
 	}
 
 	if (!(modules[module_id].can_id)) {
-		fprintf(stderr, "module id not found in module list!\n");
+		fprintf(stderr, "\nmodule id not found in module list!\n\n");
 		exit(1);
 	}
 
@@ -175,7 +180,7 @@ int main(int argc, char **argv)
 	hw_type = modules[module_id].data[7];
 
 	if (check_ch_name(infile, hw_type)) {
-		fprintf(stderr, "\nno ch_filename in bin-file for hardware type %d (%s)!\n",
+		fprintf(stderr, "\nno ch_filename in bin-file for hardware type %d (%s)!\n\n",
 			hw_type, hw_name(hw_type));
 		exit(1);
 	}
