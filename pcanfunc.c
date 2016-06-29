@@ -85,10 +85,9 @@ int query_modules(int s, struct can_frame *modules)
 				exit(1);
 			}
 
-			if ((frame.data[0] != 0xE6) ||
+			if ((frame.data[0] & 0xDF != 0xC6) ||
 			    ((frame.data[1] & 0xF0) != 0x40) ||
 			    (frame.data[2] != 0x06) ||
-			    (frame.data[7] != 0x00) ||
 			    (frame.can_dlc != 8))
 			{
 				fprintf(stderr, "received wrong module query!\n");
