@@ -187,6 +187,15 @@ int main(int argc, char **argv)
 
 	printf("\nflashing module id : %d\n", module_id);
 
+	if (hw_type == 25) { /* PCAN Router pro in PPCAN mode */
+		printf("\nswitch module into bootloader ... ");
+		fflush(stdout);
+		switch_to_bootloader(s, module_id);
+		sleep(1);
+		get_status(s, module_id, NULL);
+		printf("done\n");
+	}
+
 	printf("\nerasing flash sectors:\n");
 
 	entries = num_flashblocks(hw_type);
@@ -250,6 +259,15 @@ int main(int argc, char **argv)
 		foffset += BLKSZ;
 
 	} /* while (1) */
+
+	if (hw_type == 25) { /* PCAN Router pro in PPCAN mode */
+		printf("\nreset module ... ");
+		fflush(stdout);
+		reset_module(s, module_id);
+		sleep(1);
+		get_status(s, module_id, NULL);
+		printf("done\n");
+	}
 
 	printf("\ndone.\n\n");
 

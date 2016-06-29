@@ -219,6 +219,40 @@ void verify(int s, uint8_t module_id)
         }
 }
 
+void switch_to_bootloader(int s, uint8_t module_id)
+{
+	struct can_frame frame;
+
+	init_set_cmd(&frame);
+	frame.data[2] = module_id;
+	frame.data[3] = 0x07;
+	frame.data[4] = 0x55;
+	frame.data[5] = 0;
+	frame.data[6] = 0;
+
+        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+                perror("write");
+                exit(1);
+        }
+}
+
+void reset_module(int s, uint8_t module_id)
+{
+	struct can_frame frame;
+
+	init_set_cmd(&frame);
+	frame.data[2] = module_id;
+	frame.data[3] = 0x0F;
+	frame.data[4] = 0x55;
+	frame.data[5] = 0;
+	frame.data[6] = 0;
+
+        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+                perror("write");
+                exit(1);
+        }
+}
+
 uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 {
 	struct can_frame frame;
@@ -313,7 +347,7 @@ void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint
 	}
 
 	status = get_status(s, module_id, NULL);
-	if (status != (SET_STARTADDR | SET_LENGTH)) {
+	if ((status & (SET_STARTADDR | SET_LENGTH)) != (SET_STARTADDR | SET_LENGTH)) {
 		fprintf(stderr, "flash3 - wrong status %02X!\n", status);
 		exit(1);
 	}
