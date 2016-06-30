@@ -187,7 +187,7 @@ int main(int argc, char **argv)
 
 	printf("\nflashing module id : %d\n", module_id);
 
-	if (hw_type == 25) { /* PCAN Router pro in PPCAN mode */
+	if (hw_flags(hw_type, SWITCH_TO_BOOTLOADER)) { /* PPCAN mode modules */
 		printf("\nswitch module into bootloader ... ");
 		fflush(stdout);
 		switch_to_bootloader(s, module_id);
@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
-	alternating_xor_flip = get_hw_xor_flip(hw_type);
+	alternating_xor_flip = hw_flags(hw_type, FDATA_INVERT);
 	crc_start = crc_startpos(hw_type);
 
 	while (1) {
@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 
 	} /* while (1) */
 
-	if (hw_type == 25) { /* PCAN Router pro in PPCAN mode */
+	if (hw_flags(hw_type, RESET_AFTER_FLASH)) { /* PPCAN mode modules */
 		printf("\nreset module ... ");
 		fflush(stdout);
 		reset_module(s, module_id);

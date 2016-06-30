@@ -300,7 +300,7 @@ uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 	exit(1);
 }
 
-void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, int alternating_xor_flip)
+void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip)
 {
 	struct can_frame frame;
 	int i, j;

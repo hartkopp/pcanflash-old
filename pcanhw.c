@@ -149,57 +149,57 @@ const fblock_t hw40[] = {
 /* hardware type descriptions */
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
-		   1, 0,
+		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0,
 		   sizeof(hw4) / sizeof(fblock_t),
 		   hw4};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
-		   1, 0x03DF00,
+		   (FDATA_INVERT), 0x03DF00,
 		   sizeof(hw16) / sizeof(fblock_t),
 		   hw16};
 
 const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
-		   1, 0xFF9000,
+		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0xFF9000,
 		   sizeof(hw19) / sizeof(fblock_t),
 		   hw19};
 
 const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
-		   1, 0x002000,
+		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x002000,
 		   sizeof(hw21) / sizeof(fblock_t),
 		   hw21};
 
 const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
-		   1, 0x03DF00,
+		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x03DF00,
 		   sizeof(hw25) / sizeof(fblock_t),
 		   hw25};
 
 const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
-		   1, 0x03DF00,
+		   (FDATA_INVERT), 0x03DF00,
 		   sizeof(hw31) / sizeof(fblock_t),
 		   hw31};
 
 const hw_t hwt34 = {"PCAN-USB Pro FD", "PCAN-USB_PRO_FD",
-		   1, 0x000100,
+		   (FDATA_INVERT), 0x000100,
 		   sizeof(hw34) / sizeof(fblock_t),
 		   hw34};
 
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
-		   1, 0x03DF00,
+		   (FDATA_INVERT), 0x03DF00,
 		   sizeof(hw35) / sizeof(fblock_t),
 		   hw35};
 
 const hw_t hwt36 = {"PCAN-USB FD", "PCAN-USB_FD",
-		   1, 0x000100,
+		   (FDATA_INVERT), 0x000100,
 		   sizeof(hw36) / sizeof(fblock_t),
 		   hw36};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
-		   1, 0x000100,
+		   (FDATA_INVERT), 0x000100,
 		   sizeof(hw37) / sizeof(fblock_t),
 		   hw37};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
-		   1, 0,
+		   (FDATA_INVERT), 0,
 		   sizeof(hw40) / sizeof(fblock_t),
 		   hw40};
 
@@ -233,14 +233,14 @@ uint32_t crc_startpos(uint8_t hw_type)
 	return 0; /* disabled */
 }
 
-int get_hw_xor_flip(uint8_t hw_type)
+uint32_t hw_flags(uint8_t hw_type, const uint32_t flags)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
 	if (hwt)
-		return hwt->fdata_invert;
+		return hwt->flags & flags;
 
-	return 1; /* enabled by default */
+	return 0; /* disabled by default */
 }
 
 const char *hw_name(uint8_t hw_type)

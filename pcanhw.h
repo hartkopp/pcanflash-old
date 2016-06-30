@@ -32,7 +32,7 @@
 #define EMPTY 0xFFU
 
 uint32_t crc_startpos(uint8_t hw_type);
-int get_hw_xor_flip(uint8_t hw_type);
+uint32_t hw_flags(uint8_t hw_type, const uint32_t flags);
 const char *hw_name(uint8_t hw_type);
 const char *flash_name(uint8_t flash_type);
 int num_flashblocks(uint8_t hw_type);
@@ -49,8 +49,14 @@ typedef struct {
 typedef struct {
 	const char name[HW_NAME_MAX_LEN];
 	const char ch_file[HW_NAME_MAX_LEN];
-	const int fdata_invert;
+	const uint32_t flags;
 	const uint32_t crc_startpos;
 	const int num_flashblocks;
 	const fblock_t *flashblocks;
 } hw_t;
+
+/* hardware type specific flags */
+
+#define FDATA_INVERT		(1<<0)
+#define SWITCH_TO_BOOTLOADER	(1<<1)
+#define RESET_AFTER_FLASH	(1<<2)
