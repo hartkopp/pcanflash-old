@@ -146,6 +146,15 @@ const fblock_t hw37[] = {
 const fblock_t hw40[] = {
 };
 
+const fblock_t hw42[] = {
+};
+
+const fblock_t hw43[] = {
+};
+
+const fblock_t hw44[] = {
+};
+
 /* hardware type descriptions */
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
@@ -203,6 +212,21 @@ const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   sizeof(hw40) / sizeof(fblock_t),
 		   hw40};
 
+const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
+		   (FDATA_INVERT), 0,
+		   sizeof(hw42) / sizeof(fblock_t),
+		   hw42};
+
+const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
+		   (FDATA_INVERT), 0,
+		   sizeof(hw43) / sizeof(fblock_t),
+		   hw43};
+
+const hw_t hwt44 = {"PCAN-MicroMod FD", "PCAN-MicroMod-FD",
+		   (FDATA_INVERT), 0,
+		   sizeof(hw44) / sizeof(fblock_t),
+		   hw44};
+
 /* index table for fast hw_type referencing */
 
 const hw_t *hwtab[] =
@@ -212,7 +236,7 @@ const hw_t *hwtab[] =
 	&hwt16,	NULL,	NULL,	&hwt19,	NULL,	&hwt21,	NULL,	NULL,
 	NULL,	&hwt25,	NULL,	NULL,	NULL,	NULL,	NULL,	&hwt31,
 	NULL,	NULL,	&hwt34,	&hwt35,	&hwt36,	&hwt37,	NULL,	NULL,
-	&hwt40
+	&hwt40,	NULL,	&hwt42,	&hwt43,	&hwt44
 };
 
 const hw_t *get_hw(uint8_t hw_type)
@@ -282,6 +306,12 @@ const char *flash_name(uint8_t flash_type)
 		return "LPC407X_8X";
 	case 40:
 		return "FLASH_ROUTER_FD";
+	case 42:
+		return "FLASH_ROUTER_PRO_FD";
+	case 43:
+		return "LPC546xx_256k";
+	case 44:
+		return "LPC546xx_512k";
 	default:
 		return "unkown";
 	}
