@@ -253,6 +253,23 @@ void reset_module(int s, uint8_t module_id)
         }
 }
 
+void end_command(int s, uint8_t module_id)
+{
+	struct can_frame frame;
+
+	init_set_cmd(&frame);
+	frame.data[2] = module_id;
+	frame.data[3] = 0x12;
+	frame.data[4] = 0;
+	frame.data[5] = 0;
+	frame.data[6] = 0;
+
+        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+                perror("write");
+                exit(1);
+        }
+}
+
 uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 {
 	struct can_frame frame;

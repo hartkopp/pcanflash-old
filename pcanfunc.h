@@ -38,6 +38,7 @@ void start_programming(int s, uint8_t module_id);
 void verify(int s, uint8_t module_id);
 void switch_to_bootloader(int s, uint8_t module_id);
 void reset_module(int s, uint8_t module_id);
+void end_command(int s, uint8_t module_id);
 uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf);
 void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip);
 void erase_block(int s, uint8_t module_id, uint32_t startaddr, uint32_t blksz);
