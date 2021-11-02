@@ -52,13 +52,17 @@ extern int optind, opterr, optopt;
 void print_usage(char *prg)
 {
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
-	fprintf(stderr, "Options: -v (verbose)\n");
+	fprintf(stderr, "Options: -c (color)\n");
 	fprintf(stderr, "\n");
 }
 
-void print_cmd(struct can_frame cf)
+void print_cmd(struct can_frame cf, int color)
 {
-	printf("%s[%d] ", FGRED, cf.data[2]);
+	if (color)
+		printf("%s", FGRED);
+
+	printf("[%d] ", cf.data[2]);
+
 	switch (cf.data[3]) {
 
 	case 0x00:
@@ -109,14 +113,20 @@ void print_cmd(struct can_frame cf)
 			printf("ResetModule (unknown)");
 		break;
 	}
-	printf("\n%s", ATTRESET);
+
+	if (color)
+		printf("\n%s", ATTRESET);
 }
 
-void print_status(struct can_frame cf)
+void print_status(struct can_frame cf, int color)
 {
 	uint8_t status = cf.data[5];
 
-	printf("%s[%d] (0x%02X) ", FGBLUE, cf.data[2], status);
+	if (color)
+		printf("%s", FGBLUE);
+
+	printf("[%d] (0x%02X) ", cf.data[2], status);
+
 	if (status & SET_STARTADDR)
 		printf("SET_STARTADDR ");
 	if (status & SET_CHECKSUM)
@@ -129,7 +139,9 @@ void print_status(struct can_frame cf)
 		printf("SET_CHECKSUM_OK ");
 	if (status & SET_VERIFY_OK)
 		printf("SET_VERIFY_OK ");
-	printf("\n%s", ATTRESET);
+
+	if (color)
+		printf("\n%s", ATTRESET);
 }
 
 int main(int argc, char **argv)
@@ -140,12 +152,12 @@ int main(int argc, char **argv)
         struct can_frame cf;
 	int opt;
 	int ret;
-	int verbose = 0;
+	int color = 0;
 
-	while ((opt = getopt(argc, argv, "v?")) != -1) {
+	while ((opt = getopt(argc, argv, "c?")) != -1) {
 		switch (opt) {
-		case 'v':
-			verbose = 1;
+		case 'c':
+			color = 1;
 			break;
 
 		case '?':
@@ -194,9 +206,9 @@ int main(int argc, char **argv)
 			continue;
 
 		if (cf.can_dlc == 7)
-			print_cmd(cf);
+			print_cmd(cf, color);
 		else
-			print_status(cf);
+			print_status(cf, color);
 	}
 
 	close(s);
