@@ -253,7 +253,7 @@ void reset_module(int s, uint8_t module_id)
         }
 }
 
-void end_command(int s, uint8_t module_id)
+void end_programming(int s, uint8_t module_id)
 {
 	struct can_frame frame;
 

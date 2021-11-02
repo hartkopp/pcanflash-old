@@ -181,7 +181,7 @@ const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   unknownflashid};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
-		   (FDATA_INVERT), 0,
+		   (FDATA_INVERT | END_PROGRAMMING), 0,
 		   40,
 		   sizeof(flashid40) / sizeof(fblock_t),
 		   flashid40};

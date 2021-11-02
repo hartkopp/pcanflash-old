@@ -62,3 +62,4 @@ typedef struct {
 #define FDATA_INVERT		(1<<0)
 #define SWITCH_TO_BOOTLOADER	(1<<1)
 #define RESET_AFTER_FLASH	(1<<2)
+#define END_PROGRAMMING		(1<<3)

@@ -266,6 +266,15 @@ int main(int argc, char **argv)
 
 	} /* while (1) */
 
+	if (hw_flags(hw_type, END_PROGRAMMING)) { /* recent hw modules */
+		printf("\nend programming ... ");
+		fflush(stdout);
+		end_programming(s, module_id);
+		sleep(1);
+		get_status(s, module_id, NULL);
+		printf("done\n");
+	}
+
 	if (hw_flags(hw_type, RESET_AFTER_FLASH)) { /* PPCAN mode modules */
 		printf("\nreset module ... ");
 		fflush(stdout);
