@@ -33,10 +33,10 @@
 
 /* flash block layouts */
 
-const fblock_t hw4[] = {
+const fblock_t flashid4[] = {
 };
 
-const fblock_t hw16[] = {
+const fblock_t flashid12[] = {
 	{0x2000, 0x2000},
 	{0x4000, 0x2000},
 	{0x6000, 0x2000},
@@ -55,161 +55,107 @@ const fblock_t hw16[] = {
 	{0x3C000, 0x2000}
 };
 
-const fblock_t hw19[] = {
+const fblock_t flashid14[] = {
 };
 
-const fblock_t hw21[] = {
+const fblock_t flashid16[] = {
 };
 
-const fblock_t hw25[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
+const fblock_t flashid20[] = {
 };
 
-const fblock_t hw31[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
+const fblock_t flashid21[] = {
 };
 
-const fblock_t hw34[] = {
+const fblock_t flashid22[] = {
 };
 
-const fblock_t hw35[] = {
-	{0x2000, 0x2000},
-	{0x4000, 0x2000},
-	{0x6000, 0x2000},
-	{0x8000, 0x2000},
-	{0xA000, 0x2000},
-	{0xC000, 0x2000},
-	{0xE000, 0x2000},
-	{0x10000, 0x10000},
-	{0x20000, 0x10000},
-	{0x30000, 0x2000},
-	{0x32000, 0x2000},
-	{0x34000, 0x2000},
-	{0x36000, 0x2000},
-	{0x38000, 0x2000},
-	{0x3A000, 0x2000},
-	{0x3C000, 0x2000}
+const fblock_t flashid40[] = {
 };
 
-const fblock_t hw36[] = {
+const fblock_t flashid42[] = {
 };
 
-const fblock_t hw37[] = {
+const fblock_t flashid43[] = {
 };
 
-const fblock_t hw40[] = {
+const fblock_t flashid44[] = {
 };
 
-const fblock_t hw42[] = {
-};
-
-const fblock_t hw43[] = {
-};
-
-const fblock_t hw44[] = {
+const fblock_t unknownflashid[] = {
 };
 
 /* hardware type descriptions */
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0,
-		   sizeof(hw4) / sizeof(fblock_t),
-		   hw4};
+		   sizeof(flashid4) / sizeof(fblock_t),
+		   flashid4};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
 		   (FDATA_INVERT), 0x03DF00,
-		   sizeof(hw16) / sizeof(fblock_t),
-		   hw16};
+		   sizeof(flashid12) / sizeof(fblock_t),
+		   flashid12};
 
 const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0xFF9000,
-		   sizeof(hw19) / sizeof(fblock_t),
-		   hw19};
+		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   unknownflashid};
 
 const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x002000,
-		   sizeof(hw21) / sizeof(fblock_t),
-		   hw21};
+		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   unknownflashid};
 
 const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x03DF00,
-		   sizeof(hw25) / sizeof(fblock_t),
-		   hw25};
+		   sizeof(flashid12) / sizeof(fblock_t),
+		   flashid12};
 
 const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
 		   (FDATA_INVERT), 0x03DF00,
-		   sizeof(hw31) / sizeof(fblock_t),
-		   hw31};
+		   sizeof(flashid12) / sizeof(fblock_t),
+		   flashid12};
 
 const hw_t hwt34 = {"PCAN-USB Pro FD", "PCAN-USB_PRO_FD",
 		   (FDATA_INVERT), 0x000100,
-		   sizeof(hw34) / sizeof(fblock_t),
-		   hw34};
+		   sizeof(flashid20) / sizeof(fblock_t),
+		   flashid20};
 
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
 		   (FDATA_INVERT), 0x03DF00,
-		   sizeof(hw35) / sizeof(fblock_t),
-		   hw35};
+		   sizeof(flashid12) / sizeof(fblock_t),
+		   flashid12};
 
 const hw_t hwt36 = {"PCAN-USB FD", "PCAN-USB_FD",
 		   (FDATA_INVERT), 0x000100,
-		   sizeof(hw36) / sizeof(fblock_t),
-		   hw36};
+		   sizeof(flashid21) / sizeof(fblock_t),
+		   flashid21};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   (FDATA_INVERT), 0x000100,
-		   sizeof(hw37) / sizeof(fblock_t),
-		   hw37};
+		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   unknownflashid};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   (FDATA_INVERT), 0,
-		   sizeof(hw40) / sizeof(fblock_t),
-		   hw40};
+		   sizeof(flashid40) / sizeof(fblock_t),
+		   flashid40};
 
 const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
 		   (FDATA_INVERT), 0,
-		   sizeof(hw42) / sizeof(fblock_t),
-		   hw42};
+		   sizeof(flashid42) / sizeof(fblock_t),
+		   flashid42};
 
 const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
 		   (FDATA_INVERT), 0,
-		   sizeof(hw43) / sizeof(fblock_t),
-		   hw43};
+		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   unknownflashid};
 
 const hw_t hwt44 = {"PCAN-MicroMod FD", "PCAN-MicroMod-FD",
 		   (FDATA_INVERT), 0,
-		   sizeof(hw44) / sizeof(fblock_t),
-		   hw44};
+		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   unknownflashid};
 
 /* index table for fast hw_type referencing */
 
