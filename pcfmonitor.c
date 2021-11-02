@@ -65,57 +65,69 @@ void print_cmd(struct can_frame cf, int color)
 
 	switch (cf.data[3]) {
 
-	case 0x00:
+	case CAN2FLASH_STATE_REQUEST:
 		printf("GetStatus");
 		break;
 
-	case 0x01:
+	case CAN2FLASH_SET_STARTADDRESS:
 		printf("SetStartAddr 0x%02X%02X%02X", cf.data[4], cf.data[5], cf.data[6]);
 		break;
 
-	case 0x02:
+	case CAN2FLASH_SET_BLOCKSIZE:
 		printf("SetBlockSize 0x%02X%02X%02X", cf.data[4], cf.data[5], cf.data[6]);
 		break;
 
-	case 0x03:
+	case CAN2FLASH_SET_CHECKSUM:
 		printf("SetCheckSum 0x%02X%02X", cf.data[4], cf.data[5]);
 		break;
 
-	case 0x04:
+	case CAN2FLASH_ERASE_SECTOR:
 		if (cf.data[4] == 0x55)
 			printf("EraseSector");
 		else
 			printf("EraseSector (unknown)");
 		break;
 
-	case 0x05:
+	case CAN2FLASH_START_PROGRAMMING:
 		if (cf.data[4] == 0x55)
 			printf("StartProgramming");
 		else
 			printf("StartProgramming (unknown)");
 		break;
 
-	case 0x06:
+	case CAN2FLASH_VERIFY:
 		printf("Verify");
 		break;
 
-	case 0x07:
+	case CAN2FLASH_SWITCH_TO_BOOTLOADER:
 		if (cf.data[4] == 0x55)
 			printf("SwitchToBootloader");
 		else
 			printf("SwitchToBootloader (unknown)");
 		break;
 
-	case 0x0F:
+	case CAN2FLASH_RESET_REQUEST:
 		if (cf.data[4] == 0x55)
 			printf("ResetModule");
 		else
 			printf("ResetModule (unknown)");
 		break;
+
+	case CAN2FLASH_END:
+		printf("EndProgramming");
+		break;
+
+	default:
+		printf("(unknown command) 0x%02X", cf.data[3]);
+		break;
 	}
 
+	printf("\n");
+
 	if (color)
-		printf("\n%s", ATTRESET);
+		printf("%s", ATTRESET);
+
+	fflush(stdout);
 }
 
 void print_status(struct can_frame cf, int color)
@@ -140,8 +152,12 @@ void print_status(struct can_frame cf, int color)
 	if (status & SET_VERIFY_OK)
 		printf("SET_VERIFY_OK ");
 
+	printf("\n");
+
 	if (color)
-		printf("\n%s", ATTRESET);
+		printf("%s", ATTRESET);
+
+	fflush(stdout);
 }
 
 int main(int argc, char **argv)
