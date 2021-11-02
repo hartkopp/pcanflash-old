@@ -10,7 +10,7 @@ CFLAGS    = -O2 -Wall -Wno-parentheses \
 
 CPPFLAGS += -D_FILE_OFFSET_BITS=64
 
-PROGRAMS = pcanflash
+PROGRAMS = pcanflash pcfmonitor
 
 all: $(PROGRAMS)
 
