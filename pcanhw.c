@@ -89,71 +89,85 @@ const fblock_t unknownflashid[] = {
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0,
+		   4,
 		   sizeof(flashid4) / sizeof(fblock_t),
 		   flashid4};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
 		   (FDATA_INVERT), 0x03DF00,
+		   12,
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
 
 const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0xFF9000,
+		   0,
 		   sizeof(unknownflashid) / sizeof(fblock_t),
 		   unknownflashid};
 
 const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x002000,
+		   0,
 		   sizeof(unknownflashid) / sizeof(fblock_t),
 		   unknownflashid};
 
 const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
 		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH), 0x03DF00,
+		   12,
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
 
 const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
 		   (FDATA_INVERT), 0x03DF00,
+		   12,
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
 
 const hw_t hwt34 = {"PCAN-USB Pro FD", "PCAN-USB_PRO_FD",
 		   (FDATA_INVERT), 0x000100,
+		   20,
 		   sizeof(flashid20) / sizeof(fblock_t),
 		   flashid20};
 
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
 		   (FDATA_INVERT), 0x03DF00,
+		   12,
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
 
 const hw_t hwt36 = {"PCAN-USB FD", "PCAN-USB_FD",
 		   (FDATA_INVERT), 0x000100,
+		   21,
 		   sizeof(flashid21) / sizeof(fblock_t),
 		   flashid21};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   (FDATA_INVERT), 0x000100,
+		   0,
 		   sizeof(unknownflashid) / sizeof(fblock_t),
 		   unknownflashid};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   (FDATA_INVERT), 0,
+		   40,
 		   sizeof(flashid40) / sizeof(fblock_t),
 		   flashid40};
 
 const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
 		   (FDATA_INVERT), 0,
+		   42,
 		   sizeof(flashid42) / sizeof(fblock_t),
 		   flashid42};
 
 const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
 		   (FDATA_INVERT), 0,
+		   0,
 		   sizeof(unknownflashid) / sizeof(fblock_t),
 		   unknownflashid};
 
 const hw_t hwt44 = {"PCAN-MicroMod FD", "PCAN-MicroMod-FD",
 		   (FDATA_INVERT), 0,
+		   0,
 		   sizeof(unknownflashid) / sizeof(fblock_t),
 		   unknownflashid};
 
@@ -314,4 +328,11 @@ int check_ch_name(FILE *infile, uint8_t hw_type)
 		if (fseek(infile, ftell(infile) - (HW_NAME_MAX_LEN - 1), SEEK_SET))
 			return 1;
 	}
+}
+
+int check_flash_id_type(uint8_t hw_type, uint8_t flash_id_type)
+{
+	const hw_t *hwt = get_hw(hw_type);
+
+	return (hwt->flash_id_type != flash_id_type);
 }

@@ -147,6 +147,12 @@ int main(int argc, char **argv)
 			modules[i].data[7] = cf.data[3];
 			printf("             - hardware %d (%s) flash type %d (%s)\n",
 			       cf.data[3], hw_name(cf.data[3]), cf.data[4], flash_name(cf.data[4]));
+
+			/* check if hardware fits to known flash id type */
+			if (check_flash_id_type(cf.data[3], cf.data[4])) {
+				fprintf(stderr, "\nFlash ID type does not match the hardware ID!\n\n");
+				exit(1);
+			}
 		}
 	}
 
