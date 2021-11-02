@@ -123,7 +123,7 @@ void set_startaddress(int s, uint8_t module_id, uint32_t addr)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x01;
+	frame.data[3] = CAN2FLASH_SET_STARTADDRESS;
 	frame.data[4] = (addr >> 16) & 0xFF;
 	frame.data[5] = (addr >> 8) & 0xFF;
 	frame.data[6] = addr & 0xFF;
@@ -140,7 +140,7 @@ void set_blocksize(int s, uint8_t module_id, uint32_t size)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x02;
+	frame.data[3] = CAN2FLASH_SET_BLOCKSIZE;
 	frame.data[4] = (size >> 16) & 0xFF;
 	frame.data[5] = (size >> 8) & 0xFF;
 	frame.data[6] = size & 0xFF;
@@ -157,7 +157,7 @@ void set_checksum(int s, uint8_t module_id, uint16_t csum)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x03;
+	frame.data[3] = CAN2FLASH_SET_CHECKSUM;
 	frame.data[4] = (csum >> 8) & 0xFF;
 	frame.data[5] = csum & 0xFF;
 	frame.data[6] = 0;
@@ -174,7 +174,7 @@ void erase_sector(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x04;
+	frame.data[3] = CAN2FLASH_ERASE_SECTOR;
 	frame.data[4] = 0x55;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -191,7 +191,7 @@ void start_programming(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x05;
+	frame.data[3] = CAN2FLASH_START_PROGRAMMING;
 	frame.data[4] = 0x55;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -208,7 +208,7 @@ void verify(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x06;
+	frame.data[3] = CAN2FLASH_VERIFY;
 	frame.data[4] = 0;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -225,7 +225,7 @@ void switch_to_bootloader(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x07;
+	frame.data[3] = CAN2FLASH_SWITCH_TO_BOOTLOADER;
 	frame.data[4] = 0x55;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -242,7 +242,7 @@ void reset_module(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x0F;
+	frame.data[3] = CAN2FLASH_RESET_REQUEST;
 	frame.data[4] = 0x55;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -259,7 +259,7 @@ void end_command(int s, uint8_t module_id)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0x12;
+	frame.data[3] = CAN2FLASH_END;
 	frame.data[4] = 0;
 	frame.data[5] = 0;
 	frame.data[6] = 0;

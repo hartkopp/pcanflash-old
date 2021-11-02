@@ -38,6 +38,18 @@
 #define SET_CHECKSUM_OK (1 << 6) // 40
 #define SET_VERIFY_OK   (1 << 7) // 80
 
+#define CAN2FLASH_STATE_REQUEST        0x00
+#define CAN2FLASH_SET_STARTADDRESS     0x01
+#define CAN2FLASH_SET_BLOCKSIZE        0x02
+#define CAN2FLASH_SET_CHECKSUM         0x03
+#define CAN2FLASH_ERASE_SECTOR         0x04
+#define CAN2FLASH_START_PROGRAMMING    0x05
+#define CAN2FLASH_VERIFY               0x06
+#define CAN2FLASH_SWITCH_TO_BOOTLOADER 0x07
+#define CAN2FLASH_RESET_REQUEST        0x0F
+#define CAN2FLASH_END                  0x12
+#define CAN2FLASH_GET_JSON_DESCRIPTOR  0x13
+
 typedef struct {
 	uint32_t	address;
 	uint32_t	len;
