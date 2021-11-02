@@ -225,7 +225,7 @@ const hw_t *hwtab[] =
 
 const hw_t *get_hw(uint8_t hw_type)
 {
-	if (hw_type > 40)
+	if (hw_type > 44)
 		return NULL; /* unknown */
 
 	return hwtab[hw_type];
