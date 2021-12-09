@@ -47,6 +47,7 @@ typedef struct {
 } fblock_t;
 
 #define HW_NAME_MAX_LEN 24
+#define UNKNOWN_FLASH_ID 0
 
 typedef struct {
 	const char name[HW_NAME_MAX_LEN];
