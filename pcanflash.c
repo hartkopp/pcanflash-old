@@ -70,6 +70,7 @@ int main(int argc, char **argv)
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip;
 	uint32_t crc_start;
+	uint32_t floffset;
 	int opt, i;
 	uint8_t hw_type = 0;
 	long foffset;
@@ -217,6 +218,7 @@ int main(int argc, char **argv)
 	foffset = 0;
 	alternating_xor_flip = hw_flags(hw_type, FDATA_INVERT);
 	crc_start = crc_startpos(hw_type);
+	floffset = get_flash_offset(hw_type);
 
 	while (1) {
 
@@ -256,7 +258,7 @@ int main(int argc, char **argv)
 			}
 
 			/* write non-empty block */
-			write_block(s, module_id, foffset, BLKSZ, buf, alternating_xor_flip);
+			write_block(s, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip);
 		}
 
 		if (feof(infile))
