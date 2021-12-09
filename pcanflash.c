@@ -56,6 +56,7 @@ void print_usage(char *prg)
 	fprintf(stderr, "Options: -f <file.bin>	 (binary file to flash)\n");
 	fprintf(stderr, "	  -i <module_id> (skip question when discovering multiple ids)\n");
 	fprintf(stderr, "	  -q		 (just query modules and quit)\n");
+	fprintf(stderr, "	  -r		 (reset module after flashing)\n");
 	fprintf(stderr, "\n");
 }
 
@@ -69,6 +70,7 @@ int main(int argc, char **argv)
 	int s; /* CAN_RAW socket */
 	static FILE *infile;
 	static int query;
+	static int do_reset;
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip;
 	uint32_t crc_start;
@@ -79,7 +81,7 @@ int main(int argc, char **argv)
 	int entries;
 	crc_array_t *ca;
 
-	while ((opt = getopt(argc, argv, "f:i:q?")) != -1) {
+	while ((opt = getopt(argc, argv, "f:i:qr?")) != -1) {
 		switch (opt) {
 		case 'f':
 			infile = fopen(optarg, "r");
@@ -95,6 +97,10 @@ int main(int argc, char **argv)
 
 		case 'q':
 			query = 1;
+			break;
+
+		case 'r':
+			do_reset = 1;
 			break;
 
 		case '?':
@@ -300,7 +306,7 @@ int main(int argc, char **argv)
 		printf("done\n");
 	}
 
-	if (has_hw_flags(hw_type, RESET_AFTER_FLASH)) { /* PPCAN mode modules */
+	if (has_hw_flags(hw_type, RESET_AFTER_FLASH) || do_reset) {
 		printf("\nreset module ... ");
 		fflush(stdout);
 		reset_module(s, module_id);
