@@ -44,8 +44,8 @@
 #include "pcanflash.h"
 
 #define ATTRESET "\33[0m"
-#define FGRED    "\33[31m"
-#define FGBLUE   "\33[34m"
+#define FGRED	 "\33[31m"
+#define FGBLUE	 "\33[34m"
 
 extern int optind, opterr, optopt;
 
@@ -164,8 +164,8 @@ int main(int argc, char **argv)
 {
 	int s; /* CAN_RAW socket */
 	struct sockaddr_can addr;
-        struct can_filter rfilter;
-        struct can_frame cf;
+	struct can_filter rfilter;
+	struct can_frame cf;
 	int opt;
 	int ret;
 	int color = 0;
@@ -184,29 +184,29 @@ int main(int argc, char **argv)
 		}
 	}
 
-        if ((argc - optind) != 1) {
-                print_usage(basename(argv[0]));
-                exit(0);
-        }
+	if ((argc - optind) != 1) {
+		print_usage(basename(argv[0]));
+		exit(0);
+	}
 
-        if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
-                perror("socket");
-                return 1;
-        }
+	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+		perror("socket");
+		return 1;
+	}
 
-        /* set single CAN ID raw filters for RX and TX frames */
-	rfilter.can_id   = CAN_ID & CAN_SFF_MASK;
+	/* set single CAN ID raw filters for RX and TX frames */
+	rfilter.can_id	 = CAN_ID & CAN_SFF_MASK;
 	rfilter.can_mask = (CAN_SFF_MASK|CAN_EFF_FLAG|CAN_RTR_FLAG);
 
-        setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
+	setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
 
-        addr.can_family = AF_CAN;
-        addr.can_ifindex = if_nametoindex(argv[optind]);
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = if_nametoindex(argv[optind]);
 
-        if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-                perror("bind");
-                return 1;
-        }
+	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		perror("bind");
+		return 1;
+	}
 
 	while (1) {
 		ret = read(s, &cf, sizeof(struct can_frame));

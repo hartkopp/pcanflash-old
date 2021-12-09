@@ -53,9 +53,9 @@ extern int optind, opterr, optopt;
 void print_usage(char *prg)
 {
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
-	fprintf(stderr, "Options: -f <file.bin>  (binary file to flash)\n");
-	fprintf(stderr, "         -i <module_id> (skip question when discovering multiple ids)\n");
-	fprintf(stderr, "         -q             (just query modules and quit)\n");
+	fprintf(stderr, "Options: -f <file.bin>	 (binary file to flash)\n");
+	fprintf(stderr, "	  -i <module_id> (skip question when discovering multiple ids)\n");
+	fprintf(stderr, "	  -q		 (just query modules and quit)\n");
 	fprintf(stderr, "\n");
 }
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	struct ifreq ifr;
 	struct sockaddr_can addr;
 	static struct can_frame modules[16];
-        struct can_filter rfilter;
+	struct can_filter rfilter;
 	int s; /* CAN_RAW socket */
 	static FILE *infile;
 	static int query;
@@ -105,21 +105,21 @@ int main(int argc, char **argv)
 		}
 	}
 
-        if ((argc - optind) != 1 || (infile && query) || (!(infile || query))) {
-                print_usage(basename(argv[0]));
-                return 0;
-        }
+	if ((argc - optind) != 1 || (infile && query) || (!(infile || query))) {
+		print_usage(basename(argv[0]));
+		return 0;
+	}
 
-        if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
-                perror("socket");
-                return 1;
-        }
+	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+		perror("socket");
+		return 1;
+	}
 
-        /* set single CAN ID raw filters for RX and TX frames */
-	rfilter.can_id   = CAN_ID & CAN_SFF_MASK;
+	/* set single CAN ID raw filters for RX and TX frames */
+	rfilter.can_id	 = CAN_ID & CAN_SFF_MASK;
 	rfilter.can_mask = (CAN_SFF_MASK|CAN_EFF_FLAG|CAN_RTR_FLAG);
 
-        setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
+	setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
 
 	/* copy netdev name for ioctl request */
 	strncpy(ifr.ifr_name, argv[optind], sizeof(ifr.ifr_name)-1);
@@ -143,17 +143,17 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	addr.can_ifindex = ifr.ifr_ifindex;
-        addr.can_family = AF_CAN;
+	addr.can_family = AF_CAN;
 
-        if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-                perror("bind");
-                return 1;
-        }
+	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		perror("bind");
+		return 1;
+	}
 
 	entries = query_modules(s, modules);
 	if (!entries) {
 		fprintf(stderr, "module query failed!\n");
-                return 1;
+		return 1;
 	}
 
 	/* print module list */
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
 			get_status(s, i, &cf);
 			/* store hw_type for this module_id index in data[7] */
 			modules[i].data[7] = cf.data[3];
-			printf("             - hardware %d (%s) flash type %d (%s)\n",
+			printf("	     - hardware %d (%s) flash type %d (%s)\n",
 			       cf.data[3], get_hw_name(cf.data[3]), cf.data[4], get_flash_name(cf.data[4]));
 
 			/* check if hardware fits to known flash id type */
@@ -271,7 +271,7 @@ int main(int argc, char **argv)
 					if ((ca->mode == 1) || (ca->mode == 3) || (ca->mode == 4)) {
 						for (i = 0; i < ca->count; i++) {
 							ca->block[i].crc = calc_crc16(infile, ca->block[i].address, ca->block[i].len);
-							printf(" CRC block[%d] .address=0x%X  .len=0x%X  .crc=0x%X\n",
+							printf(" CRC block[%d] .address=0x%X  .len=0x%X	 .crc=0x%X\n",
 							       i, ca->block[i].address, ca->block[i].len, ca->block[i].crc);
 						}
 					} else

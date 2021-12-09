@@ -47,7 +47,7 @@ int query_modules(int s, struct can_frame *modules)
 	int have_rx = 1;
 	int my_id, ret;
 	fd_set rdfs;
-        struct timeval tv;
+	struct timeval tv;
 	struct can_frame frame;
 
 	/* send module query request */
@@ -59,10 +59,10 @@ int query_modules(int s, struct can_frame *modules)
 	frame.data[1] = 0x00;
 	frame.data[2] = 0x06;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 
 	while (have_rx) {
 
@@ -129,10 +129,10 @@ void set_startaddress(int s, uint8_t module_id, uint32_t addr)
 	frame.data[5] = (addr >> 8) & 0xFF;
 	frame.data[6] = addr & 0xFF;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void set_blocksize(int s, uint8_t module_id, uint32_t size)
@@ -146,10 +146,10 @@ void set_blocksize(int s, uint8_t module_id, uint32_t size)
 	frame.data[5] = (size >> 8) & 0xFF;
 	frame.data[6] = size & 0xFF;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void set_checksum(int s, uint8_t module_id, uint16_t csum)
@@ -163,10 +163,10 @@ void set_checksum(int s, uint8_t module_id, uint16_t csum)
 	frame.data[5] = csum & 0xFF;
 	frame.data[6] = 0;
     
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void erase_sector(int s, uint8_t module_id)
@@ -180,10 +180,10 @@ void erase_sector(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
     
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void start_programming(int s, uint8_t module_id)
@@ -197,10 +197,10 @@ void start_programming(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
     
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void verify(int s, uint8_t module_id)
@@ -214,10 +214,10 @@ void verify(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
     
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void switch_to_bootloader(int s, uint8_t module_id)
@@ -231,10 +231,10 @@ void switch_to_bootloader(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void reset_module(int s, uint8_t module_id)
@@ -248,10 +248,10 @@ void reset_module(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 void end_programming(int s, uint8_t module_id)
@@ -265,17 +265,17 @@ void end_programming(int s, uint8_t module_id)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
 
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 }
 
 uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 {
 	struct can_frame frame;
 	fd_set rdfs;
-        struct timeval tv;
+	struct timeval tv;
 	int ret;
 
 	init_set_cmd(&frame);
@@ -285,10 +285,10 @@ uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 	frame.data[5] = 0;
 	frame.data[6] = 0;
     
-        if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
-                perror("write");
-                exit(1);
-        }
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
 
 	FD_ZERO(&rdfs);
 	FD_SET(s, &rdfs);
