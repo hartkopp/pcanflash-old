@@ -46,8 +46,9 @@
 #include "pcanhw.h"
 #include "crc16.h"
 
-extern int optind, opterr, optopt;
+#define PCF_MIN_TX_QUEUE 500
 
+extern int optind, opterr, optopt;
 
 void print_usage(char *prg)
 {
@@ -61,6 +62,7 @@ void print_usage(char *prg)
 int main(int argc, char **argv)
 {
 	static uint8_t buf[BLKSZ+2];
+	struct ifreq ifr;
 	struct sockaddr_can addr;
 	static struct can_frame modules[16];
         struct can_filter rfilter;
@@ -105,7 +107,7 @@ int main(int argc, char **argv)
 
         if ((argc - optind) != 1 || (infile && query) || (!(infile || query))) {
                 print_usage(basename(argv[0]));
-                exit(0);
+                return 0;
         }
 
         if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
@@ -119,8 +121,29 @@ int main(int argc, char **argv)
 
         setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
 
+	/* copy netdev name for ioctl request */
+	strncpy(ifr.ifr_name, argv[optind], sizeof(ifr.ifr_name)-1);
+
+	/* check tx queue length ... */
+	if (ioctl(s, SIOCGIFTXQLEN, &ifr) < 0) {
+		perror("SIOCGIFTXQLEN");
+		return 1;
+	}
+
+	/* ... to be at least PCF_MIN_TX_QUEUE CAN frames */
+	if (ifr.ifr_qlen < PCF_MIN_TX_QUEUE) {
+		fprintf(stderr, "tx queue len %d is too small! Must be at least %d.\n",
+			ifr.ifr_qlen, PCF_MIN_TX_QUEUE);
+		return 1;
+	}
+
+	/* get interface index for bind() */
+	if (ioctl(s, SIOCGIFINDEX, &ifr) < 0) {
+		perror("SIOCGIFINDEX");
+		return 1;
+	}
+	addr.can_ifindex = ifr.ifr_ifindex;
         addr.can_family = AF_CAN;
-        addr.can_ifindex = if_nametoindex(argv[optind]);
 
         if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
                 perror("bind");
@@ -130,7 +153,7 @@ int main(int argc, char **argv)
 	entries = query_modules(s, modules);
 	if (!entries) {
 		fprintf(stderr, "module query failed!\n");
-		exit(1);
+                return 1;
 	}
 
 	/* print module list */
