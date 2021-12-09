@@ -156,23 +156,11 @@ const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
 
-const hw_t hwt34 = {"PCAN-USB Pro FD", "PCAN-USB_PRO_FD",
-		   (FDATA_INVERT), 0x000100,
-		   20,
-		   sizeof(flashid20) / sizeof(fblock_t),
-		   flashid20};
-
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
 		   (FDATA_INVERT), 0x03DF00,
 		   12,
 		   sizeof(flashid12) / sizeof(fblock_t),
 		   flashid12};
-
-const hw_t hwt36 = {"PCAN-USB FD", "PCAN-USB_FD",
-		   (FDATA_INVERT), 0x000100,
-		   21,
-		   sizeof(flashid21) / sizeof(fblock_t),
-		   flashid21};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   (FDATA_INVERT), 0x000100,
@@ -212,7 +200,7 @@ const hw_t *hwtab[] =
 	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,
 	&hwt16,	NULL,	NULL,	&hwt19,	NULL,	&hwt21,	NULL,	NULL,
 	NULL,	&hwt25,	NULL,	NULL,	NULL,	NULL,	NULL,	&hwt31,
-	NULL,	NULL,	&hwt34,	&hwt35,	&hwt36,	&hwt37,	NULL,	NULL,
+	NULL,	NULL,	NULL,	&hwt35,	NULL,	&hwt37,	NULL,	NULL,
 	&hwt40,	NULL,	&hwt42,	&hwt43,	&hwt44
 };
 
