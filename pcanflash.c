@@ -53,10 +53,10 @@ extern int optind, opterr, optopt;
 void print_usage(char *prg)
 {
 	fprintf(stderr, "\nUsage: %s <options> <interface>\n\n", prg);
-	fprintf(stderr, "Options: -f <file.bin>	 (binary file to flash)\n");
-	fprintf(stderr, "	  -i <module_id> (skip question when discovering multiple ids)\n");
-	fprintf(stderr, "	  -q		 (just query modules and quit)\n");
-	fprintf(stderr, "	  -r		 (reset module after flashing)\n");
+	fprintf(stderr, "Options: -f <file.bin>  (binary file to flash)\n");
+	fprintf(stderr, "         -i <module_id> (skip question when discovering multiple ids)\n");
+	fprintf(stderr, "         -q             (just query modules and quit)\n");
+	fprintf(stderr, "         -r             (reset module after flashing)\n");
 	fprintf(stderr, "\n");
 }
 
