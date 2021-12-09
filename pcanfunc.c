@@ -39,6 +39,7 @@
 #include <linux/can/raw.h>
 
 #include "pcanflash.h"
+#include "pcanhw.h"
 
 int query_modules(int s, struct can_frame *modules)
 {
@@ -418,5 +419,74 @@ void erase_block(int s, uint8_t module_id, uint32_t startaddr, uint32_t blksz)
 	if (status != (SET_CHECKSUM_OK | SET_ERASE_OK)) {
 		fprintf(stderr, "erase3 - wrong status %02X!\n", status);
 		exit(1);
+	}
+}
+
+void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index)
+{
+	const fblock_t *fblock;
+	uint8_t data;
+	int i;
+
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		fblock = &hwt->flashblocks[index];
+	else {
+		fprintf(stderr, "bad flashblocks entry found for hardware type %d (%s)!\n",
+			hw_type, get_hw_name(hw_type));
+		exit(1);
+	}
+
+	/* check block in bin-file */
+	if (fseek(infile, fblock->start, SEEK_SET))
+		return;
+
+	for (i = 0; i < fblock->len; i++) {
+		if (fread(&data, 1, 1, infile) != 1) {
+			/* file ended but was empty so far -> no action */
+			return;
+		}
+		if (data != EMPTY)
+			break;
+	}
+
+	/* empty block (all bytes are EMPTY / 0xFFU) -> no action */
+	if (i == fblock->len)
+		return;
+
+	erase_block(s, module_id, fblock->start, fblock->len);
+}
+
+int check_ch_name(FILE *infile, uint8_t hw_type)
+{
+	const hw_t *hwt = get_hw(hw_type);
+	char buf[HW_NAME_MAX_LEN + 2];
+
+	memset(buf, 0, sizeof(buf));
+
+	if (!hwt)
+		return 1;
+
+	rewind(infile);
+
+	while (1) {
+
+		if (fread(buf, 1, 1, infile) != 1)
+			return 1;
+
+		/* PCAN devices always start with 'P' */
+		if (buf[0] != 'P')
+			continue;
+
+		if (fread(&buf[1], 1, HW_NAME_MAX_LEN - 1, infile) != HW_NAME_MAX_LEN - 1)
+			return 1;
+
+		if (!strncmp(buf, hwt->ch_file, HW_NAME_MAX_LEN))
+			return 0; /* match */
+
+		/* no match -> rewind back behind the 'P' */
+		if (fseek(infile, ftell(infile) - (HW_NAME_MAX_LEN - 1), SEEK_SET))
+			return 1;
 	}
 }

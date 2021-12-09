@@ -31,16 +31,6 @@
 /* empty flash content -> all bits are set */
 #define EMPTY 0xFFU
 
-uint32_t get_crc_startpos(uint8_t hw_type);
-uint32_t get_flash_offset(uint8_t hw_type);
-uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags);
-const char *get_hw_name(uint8_t hw_type);
-const char *get_flash_name(uint8_t flash_type);
-int get_num_flashblocks(uint8_t hw_type);
-void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
-int check_ch_name(FILE *infile, uint8_t hw_type);
-int check_flash_id_type(uint8_t hw_type, uint8_t flash_id_type);
-
 typedef struct {
 	uint32_t start;
 	uint32_t len;
@@ -66,3 +56,12 @@ typedef struct {
 #define SWITCH_TO_BOOTLOADER	(1<<1)
 #define RESET_AFTER_FLASH	(1<<2)
 #define END_PROGRAMMING		(1<<3)
+
+const hw_t *get_hw(uint8_t hw_type);
+uint32_t get_crc_startpos(uint8_t hw_type);
+uint32_t get_flash_offset(uint8_t hw_type);
+uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags);
+const char *get_hw_name(uint8_t hw_type);
+const char *get_flash_name(uint8_t flash_type);
+int get_num_flashblocks(uint8_t hw_type);
+int check_flash_id_type(uint8_t hw_type, uint8_t flash_id_type);
