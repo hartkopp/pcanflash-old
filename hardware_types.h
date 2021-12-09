@@ -1,7 +1,7 @@
 /*
  * hardware_types.h - hardware descriptions
  *
- * Copyright (C) 2016  PEAK System-Technik GmbH
+ * Copyright (C) 2021  PEAK System-Technik GmbH
  *
  * linux@peak-system.com
  * www.peak-system.com
