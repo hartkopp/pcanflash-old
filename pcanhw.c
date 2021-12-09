@@ -209,7 +209,7 @@ const hw_t *get_hw(uint8_t hw_type)
 	return hwtab[hw_type];
 }
 
-uint32_t crc_startpos(uint8_t hw_type)
+uint32_t get_crc_startpos(uint8_t hw_type)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
@@ -229,7 +229,7 @@ uint32_t get_flash_offset(uint8_t hw_type)
 	return 0; /* disabled */
 }
 
-uint32_t hw_flags(uint8_t hw_type, const uint32_t flags)
+uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
@@ -239,7 +239,7 @@ uint32_t hw_flags(uint8_t hw_type, const uint32_t flags)
 	return 0; /* disabled by default */
 }
 
-const char *hw_name(uint8_t hw_type)
+const char *get_hw_name(uint8_t hw_type)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
@@ -249,7 +249,7 @@ const char *hw_name(uint8_t hw_type)
 	return "unkown";
 }
 
-int num_flashblocks(uint8_t hw_type)
+int get_num_flashblocks(uint8_t hw_type)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
@@ -259,7 +259,7 @@ int num_flashblocks(uint8_t hw_type)
 	return 0;
 }
 
-const char *flash_name(uint8_t flash_type)
+const char *get_flash_name(uint8_t flash_type)
 {
 	switch (flash_type) {
 	case 4:
@@ -301,7 +301,7 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 		fblock = &hwt->flashblocks[index];
 	else {
 		fprintf(stderr, "bad flashblocks entry found for hardware type %d (%s)!\n",
-			hw_type, hw_name(hw_type));
+			hw_type, get_hw_name(hw_type));
 		exit(1);
 	}
 

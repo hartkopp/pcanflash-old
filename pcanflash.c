@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 			/* store hw_type for this module_id index in data[7] */
 			modules[i].data[7] = cf.data[3];
 			printf("             - hardware %d (%s) flash type %d (%s)\n",
-			       cf.data[3], hw_name(cf.data[3]), cf.data[4], flash_name(cf.data[4]));
+			       cf.data[3], get_hw_name(cf.data[3]), cf.data[4], get_flash_name(cf.data[4]));
 
 			/* check if hardware fits to known flash id type */
 			if (check_flash_id_type(cf.data[3], cf.data[4])) {
@@ -188,13 +188,13 @@ int main(int argc, char **argv)
 
 	if (check_ch_name(infile, hw_type)) {
 		fprintf(stderr, "\nno ch_filename in bin-file for hardware type %d (%s)!\n\n",
-			hw_type, hw_name(hw_type));
+			hw_type, get_hw_name(hw_type));
 		exit(1);
 	}
 
 	printf("\nflashing module id : %d\n", module_id);
 
-	if (hw_flags(hw_type, SWITCH_TO_BOOTLOADER)) { /* PPCAN mode modules */
+	if (has_hw_flags(hw_type, SWITCH_TO_BOOTLOADER)) { /* PPCAN mode modules */
 		printf("\nswitch module into bootloader ... ");
 		fflush(stdout);
 		switch_to_bootloader(s, module_id);
@@ -205,10 +205,10 @@ int main(int argc, char **argv)
 
 	printf("\nerasing flash sectors:\n");
 
-	entries = num_flashblocks(hw_type);
+	entries = get_num_flashblocks(hw_type);
 	if (!(entries)) {
 		fprintf(stderr, "no flashblocks found for hardware type %d (%s)!\n",
-			hw_type, hw_name(hw_type));
+			hw_type, get_hw_name(hw_type));
 		exit(1);
 	}
 	for (i = 0; i < entries; i++)
@@ -216,8 +216,8 @@ int main(int argc, char **argv)
 
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
-	alternating_xor_flip = hw_flags(hw_type, FDATA_INVERT);
-	crc_start = crc_startpos(hw_type);
+	alternating_xor_flip = has_hw_flags(hw_type, FDATA_INVERT);
+	crc_start = get_crc_startpos(hw_type);
 	floffset = get_flash_offset(hw_type);
 
 	while (1) {
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
 
 	} /* while (1) */
 
-	if (hw_flags(hw_type, END_PROGRAMMING)) { /* recent hw modules */
+	if (has_hw_flags(hw_type, END_PROGRAMMING)) { /* recent hw modules */
 		printf("\nend programming ... ");
 		fflush(stdout);
 		end_programming(s, module_id);
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 		printf("done\n");
 	}
 
-	if (hw_flags(hw_type, RESET_AFTER_FLASH)) { /* PPCAN mode modules */
+	if (has_hw_flags(hw_type, RESET_AFTER_FLASH)) { /* PPCAN mode modules */
 		printf("\nreset module ... ");
 		fflush(stdout);
 		reset_module(s, module_id);

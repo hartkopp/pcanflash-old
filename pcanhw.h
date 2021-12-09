@@ -31,12 +31,12 @@
 /* empty flash content -> all bits are set */
 #define EMPTY 0xFFU
 
-uint32_t crc_startpos(uint8_t hw_type);
+uint32_t get_crc_startpos(uint8_t hw_type);
 uint32_t get_flash_offset(uint8_t hw_type);
-uint32_t hw_flags(uint8_t hw_type, const uint32_t flags);
-const char *hw_name(uint8_t hw_type);
-const char *flash_name(uint8_t flash_type);
-int num_flashblocks(uint8_t hw_type);
+uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags);
+const char *get_hw_name(uint8_t hw_type);
+const char *get_flash_name(uint8_t flash_type);
+int get_num_flashblocks(uint8_t hw_type);
 void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
 int check_ch_name(FILE *infile, uint8_t hw_type);
 int check_flash_id_type(uint8_t hw_type, uint8_t flash_id_type);
