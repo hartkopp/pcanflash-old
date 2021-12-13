@@ -438,6 +438,10 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 		exit(1);
 	}
 
+	/* skip handling of this flash block? */
+	if (fblock->skipped)
+		return;
+
 	/* check block in bin-file */
 	if (fseek(infile, fblock->start, SEEK_SET))
 		return;

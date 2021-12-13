@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /* empty flash content -> all bits are set */
 #define EMPTY 0xFFU
@@ -34,6 +35,7 @@
 typedef struct {
 	uint32_t start;
 	uint32_t len;
+	bool skipped;
 } fblock_t;
 
 #define HW_NAME_MAX_LEN 24
