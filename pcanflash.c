@@ -311,7 +311,16 @@ int main(int argc, char **argv)
 		fflush(stdout);
 		reset_module(s, module_id);
 		sleep(1);
-		get_status(s, module_id, NULL);
+
+		/* a reset which is issued by a command line option
+		 * likely leads into starting the application which
+		 * does not know about this status message. Therefore
+		 * only get the status when this is used in an original
+		 * PCAN flashing process, e.g. the PCAN Router Pro
+		 */
+		if (has_hw_flags(hw_type, RESET_AFTER_FLASH))
+			get_status(s, module_id, NULL);
+
 		printf("done\n");
 	}
 
