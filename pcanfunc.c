@@ -88,15 +88,14 @@ int query_modules(int s, struct can_frame *modules)
 				exit(1);
 			}
 
-			if ((frame.data[0] & 0xDF != 0xC6) ||
-			    ((frame.data[1] & 0xF0) != 0x40) ||
+			if ((frame.data[0] & 0xC0 != 0xC0) ||
 			    (frame.data[2] != 0x06) ||
 			    (frame.can_dlc != 8))
 			{
 				fprintf(stderr, "received wrong module query!\n");
 				exit(1);
 			}
-			my_id = frame.data[1] & 0xF;
+			my_id = frame.data[1] & MAX_MODULES_MASK;
 
 			if ((modules + my_id)->can_id)
 			{

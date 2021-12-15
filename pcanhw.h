@@ -41,6 +41,9 @@ typedef struct {
 #define HW_NAME_MAX_LEN 24
 #define UNKNOWN_FLASH_ID 0
 
+#define MAX_MODULES 64
+#define MAX_MODULES_MASK 0x3F /* '64 - 1' bit mask */
+
 typedef struct {
 	const char name[HW_NAME_MAX_LEN];
 	const char ch_file[HW_NAME_MAX_LEN];

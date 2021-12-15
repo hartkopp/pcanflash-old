@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	static uint8_t buf[BLKSZ+2];
 	struct ifreq ifr;
 	struct sockaddr_can addr;
-	static struct can_frame modules[16];
+	static struct can_frame modules[MAX_MODULES];
 	struct can_filter rfilter;
 	int s; /* CAN_RAW socket */
 	static FILE *infile;
@@ -164,12 +164,14 @@ int main(int argc, char **argv)
 
 	/* print module list */
 	printf("\nfound modules:\n\n");
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < MAX_MODULES; i++) {
 		if (modules[i].can_id) {
 			struct can_frame cf;
 
-			printf("module id %02d - date %02X.%02X.20%02X bootloader v%d.%d\n",
-			       i, modules[i].data[3], modules[i].data[4], modules[i].data[5],
+			printf("module id %02d (hw %d) - date %02X.%02X.20%02X bootloader v%d.%d\n",
+			       i,
+			       ((modules[i].data[0] << 2) | (modules[i].data[1] >> 6)) & 0xFF,
+			       modules[i].data[3], modules[i].data[4], modules[i].data[5],
 			       modules[i].data[6] >> 5, modules[i].data[6] & 0x1F);
 
 			get_status(s, i, &cf);
@@ -202,7 +204,7 @@ int main(int argc, char **argv)
 	if (module_id == NO_MODULE_ID) {
 		if (entries == 1) {
 			/* catch first and only module */
-			for (i = 0; i < 16; i++) {
+			for (i = 0; i < MAX_MODULES; i++) {
 				if (modules[i].can_id) {
 					module_id = i;
 					break;
@@ -211,7 +213,7 @@ int main(int argc, char **argv)
 		} else {
 			printf("\nmultiple modules found - please provide module id : ");
 			scanf("%d", &module_id);
-			module_id &= 0xF;
+			module_id &= MAX_MODULES_MASK;
 		}
 	}
 
