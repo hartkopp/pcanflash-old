@@ -168,13 +168,9 @@ int main(int argc, char **argv)
 		if (modules[i].can_id) {
 			struct can_frame cf;
 
-			printf("module id %02d (hw %d) - date %02X.%02X.20%02X bootloader v%d.%d\n",
-			       i,
-			       ((modules[i].data[0] << 2) | (modules[i].data[1] >> 6)) & 0xFF,
-			       modules[i].data[3], modules[i].data[4], modules[i].data[5],
-			       modules[i].data[6] >> 5, modules[i].data[6] & 0x1F);
-
+			/* get status for this found module */
 			get_status(s, i, &cf);
+
 			/* store hw_type for this module_id index in data[7] */
 			modules[i].data[7] = cf.data[3];
 
@@ -185,8 +181,17 @@ int main(int argc, char **argv)
 					exit(1);
 				}
 			} else {
-				printf("	     - hardware %d (%s) flash type %d (%s)\n",
-				       cf.data[3], get_hw_name(cf.data[3]), cf.data[4], get_flash_name(cf.data[4]));
+				printf("module id %02d (ppcan hw id %d)\n",
+				       i,
+				       ((modules[i].data[0] << 2) | (modules[i].data[1] >> 6)) & 0xFF);
+
+				printf(" - date %02X.%02X.20%02X bootloader v%d.%d\n",
+				       modules[i].data[3], modules[i].data[4], modules[i].data[5],
+				       modules[i].data[6] >> 5, modules[i].data[6] & 0x1F);
+
+				printf(" - hardware %d (%s) flash type %d (%s)\n",
+				       cf.data[3], get_hw_name(cf.data[3]),
+				       cf.data[4], get_flash_name(cf.data[4]));
 			}
 			/* check if hardware fits to known flash id type */
 			if (check_flash_id_type(cf.data[3], cf.data[4])) {
