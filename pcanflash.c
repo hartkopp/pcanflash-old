@@ -171,12 +171,9 @@ int main(int argc, char **argv)
 			/* get status for this found module */
 			get_status(s, i, &cf);
 
-			/* store hw_type for this module_id index in data[7] */
-			modules[i].data[7] = cf.data[3];
-
 			/* hardware type or flash type is 250 => get info via JSON config string */
 			if ((cf.data[3] == 250) || (cf.data[4] == 250)) {
-				if (get_json_config(s, i, &cf)) {
+				if (get_json_config(s, i, &modules[i], &cf)) {
 					fprintf(stderr, "\nError reading the JSON configuration string!\n\n");
 					exit(1);
 				}
@@ -198,6 +195,9 @@ int main(int argc, char **argv)
 				fprintf(stderr, "\nFlash ID type does not match the hardware ID!\n\n");
 				exit(1);
 			}
+
+			/* store hw_type for this module_id index in data[7] */
+			modules[i].data[7] = cf.data[3];
 		}
 	}
 

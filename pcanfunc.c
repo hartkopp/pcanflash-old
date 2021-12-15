@@ -319,12 +319,55 @@ uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 	exit(1);
 }
 
-uint8_t get_json_config(int s, uint8_t module_id, struct can_frame *cf)
+/* simple JSON parsing for relevant content */
+
+#define J_HWTYPE "\"hwType\""
+#define J_BOOTLOADER "\"bootloader\""
+#define J_FIRMWARE "\"firmware\""
+#define J_HARDWARE "\"hardware\""
+#define J_DATAMODE "\"dataMode\""
+#define J_CANBERESET "\"canBeReset\""
+
+char *findjsonstring(char *buf, const char *jsontag)
+{
+	char *ptr, *resultstr;
+
+	ptr = strstr(buf, jsontag);
+	if (ptr == NULL)
+		return NULL;
+
+	/* hop behind the JSON tag */
+	ptr += strlen(jsontag);
+
+	/* point to data content */
+	ptr = strchr(ptr, '"');
+	ptr++;
+	resultstr = ptr;
+
+	/* terminate string */
+	ptr = strchr(ptr, '"');
+	*ptr = 0;
+
+	return resultstr;
+}
+
+void restorejsonstring(char **ptr)
+{
+	/* restore trailing double quote for next query */
+	*ptr += strlen(*ptr);
+	**ptr = '"';
+}
+
+uint8_t get_json_config(int s, uint8_t module_id, struct can_frame *modules, struct can_frame *cf)
 {
 	struct can_frame frame;
 	fd_set rdfs;
 	struct timeval tv;
+
 	char buf[JSON_BUF_LEN];
+	char *ptr;
+	unsigned int hwType;
+
 	unsigned char sn = 0; /* JSON PDU counter */
 	unsigned char rxsn; /* received JSON PDU counter */
 	unsigned int bufptr = 0;
@@ -398,11 +441,44 @@ json_read_loop:
 
 		if (rxsn == 0xFF) {
 			/* we are done */
-			printf("JSON string (len %ld):\n%s\n", strlen(buf), buf);
 
-			/* TODO parse string here */
+			//printf("JSON string (len %ld):\n%s\n", strlen(buf), buf);
 
-			return 1; /* exit via error for now */
+			printf("module id %02d (ppcan hw id %d)\n",
+			       module_id,
+			       ((modules->data[0] << 2) | (modules->data[1] >> 6)) & 0xFF);
+
+			ptr = findjsonstring(buf, J_BOOTLOADER);
+			if (ptr) {
+				printf(" - bootloader %s\n", ptr);
+				restorejsonstring(&ptr);
+			}
+
+			ptr = findjsonstring(buf, J_FIRMWARE);
+			if (ptr) {
+				printf(" - firmware %s\n", ptr);
+				restorejsonstring(&ptr);
+			}
+
+			ptr = findjsonstring(buf, J_HWTYPE);
+			if (ptr) {
+				if (sscanf(ptr, "%d", &hwType) == 1) {
+					hwType &= 0xFF;
+					cf->data[3] = hwType;
+					cf->data[4] = hwType;
+
+					printf(" - hardware %d (%s) flash type %d (%s)\n",
+					       cf->data[3], get_hw_name(cf->data[3]),
+					       cf->data[4], get_flash_name(cf->data[4]));
+
+				} else  {
+					fprintf(stderr, "JSON buffer parse error (%s)!\n", J_HWTYPE);
+					exit(1);
+				}
+				restorejsonstring(&ptr);
+			}
+
+			return 0;
 		}
 
 		goto json_read_loop;
