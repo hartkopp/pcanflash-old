@@ -41,6 +41,8 @@
 #include "pcanflash.h"
 #include "pcanhw.h"
 
+#define JSON_BUF_LEN 8000
+
 int query_modules(int s, struct can_frame *modules)
 {
 	int entries = 0;
@@ -280,7 +282,7 @@ uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 
 	init_set_cmd(&frame);
 	frame.data[2] = module_id;
-	frame.data[3] = 0;
+	frame.data[3] = CAN2FLASH_STATE_REQUEST;
 	frame.data[4] = 0;
 	frame.data[5] = 0;
 	frame.data[6] = 0;
@@ -312,6 +314,99 @@ uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf)
 			memcpy(cf, &frame, sizeof(struct can_frame));
 
 		return frame.data[5];
+	}
+
+	fprintf(stderr, "timeout in get_status process!\n");
+	exit(1);
+}
+
+uint8_t get_json_config(int s, uint8_t module_id, struct can_frame *cf)
+{
+	struct can_frame frame;
+	fd_set rdfs;
+	struct timeval tv;
+	char buf[JSON_BUF_LEN];
+	unsigned char sn = 0; /* JSON PDU counter */
+	unsigned char rxsn; /* received JSON PDU counter */
+	unsigned int bufptr = 0;
+	int ret;
+
+	init_set_cmd(&frame);
+	frame.data[2] = module_id;
+	frame.data[3] = CAN2FLASH_GET_JSON_DESCRIPTOR;
+	frame.data[4] = 0x03; /* 1000 us, high byte */
+	frame.data[5] = 0xE8; /* 1000 us, low byte */
+	frame.data[6] = 0;
+
+	if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
+		perror("write");
+		exit(1);
+	}
+
+	FD_ZERO(&rdfs);
+	FD_SET(s, &rdfs);
+	tv.tv_sec = 3; /* 3s timeout */
+	tv.tv_usec = 0;
+
+json_read_loop:
+
+	ret = select(s+1, &rdfs, NULL, NULL, &tv);
+	if (ret < 0) {
+		perror("select");
+		exit(1);
+	}
+
+	if (FD_ISSET(s, &rdfs)) {
+		ret = read(s, &frame, sizeof(struct can_frame));
+		if (ret < 0) {
+			perror("read");
+			exit(1);
+		}
+
+		if ((frame.data[0] != 0x7F) || (frame.data[1] != 0xFF)) {
+			fprintf(stderr, "wrong header in in JSON reply string!\n");
+			exit(1);
+		}
+
+		rxsn = frame.data[2];
+		if (rxsn == 0x00) {
+
+			/* start sequence */
+			memset(buf, 0, sizeof(buf));
+			memcpy(buf, &frame.data[3], 5);
+			bufptr = 5;
+			sn = 0;
+
+		} else if ((rxsn == 0xFF) || (rxsn == sn + 1)) {
+
+			memcpy(&buf[bufptr], &frame.data[3], 5);
+			bufptr += 5;
+			sn = rxsn;
+
+			/* rxsn sequence is .. 0xFD 0xFE 0x01 0x02 .. */
+			if (sn == 0xFE)
+				sn = 0;
+
+			/* ensure buffer size and trailing zero */
+			if (bufptr >= (JSON_BUF_LEN - 6)) {
+				fprintf(stderr, "JSON buffer length overflow!\n");
+				exit(1);
+			}
+		} else {
+			fprintf(stderr, "JSON reception error!\n");
+			exit(1);
+		}
+
+		if (rxsn == 0xFF) {
+			/* we are done */
+			printf("JSON string (len %ld):\n%s\n", strlen(buf), buf);
+
+			/* TODO parse string here */
+
+			return 1; /* exit via error for now */
+		}
+
+		goto json_read_loop;
 	}
 
 	fprintf(stderr, "timeout in get_status process!\n");

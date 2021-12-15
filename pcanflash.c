@@ -175,9 +175,17 @@ int main(int argc, char **argv)
 			get_status(s, i, &cf);
 			/* store hw_type for this module_id index in data[7] */
 			modules[i].data[7] = cf.data[3];
-			printf("	     - hardware %d (%s) flash type %d (%s)\n",
-			       cf.data[3], get_hw_name(cf.data[3]), cf.data[4], get_flash_name(cf.data[4]));
 
+			/* hardware type or flash type is 250 => get info via JSON config string */
+			if ((cf.data[3] == 250) || (cf.data[4] == 250)) {
+				if (get_json_config(s, i, &cf)) {
+					fprintf(stderr, "\nError reading the JSON configuration string!\n\n");
+					exit(1);
+				}
+			} else {
+				printf("	     - hardware %d (%s) flash type %d (%s)\n",
+				       cf.data[3], get_hw_name(cf.data[3]), cf.data[4], get_flash_name(cf.data[4]));
+			}
 			/* check if hardware fits to known flash id type */
 			if (check_flash_id_type(cf.data[3], cf.data[4])) {
 				fprintf(stderr, "\nFlash ID type does not match the hardware ID!\n\n");
