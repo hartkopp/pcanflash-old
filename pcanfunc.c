@@ -341,11 +341,17 @@ char *findjsonstring(char *buf, const char *jsontag)
 
 	/* point to data content */
 	ptr = strchr(ptr, '"');
+	if (ptr == NULL)
+		return NULL;
+
 	ptr++;
 	resultstr = ptr;
 
 	/* terminate string */
 	ptr = strchr(ptr, '"');
+	if (ptr == NULL)
+		return NULL;
+
 	*ptr = 0;
 
 	return resultstr;
