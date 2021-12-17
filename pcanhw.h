@@ -54,6 +54,7 @@ typedef struct {
 	const uint32_t flags;
 	const uint32_t crc_startpos;
 	const uint32_t flash_offset;
+	const uint32_t max_blocksize;
 	const uint8_t flash_id_type;
 	const int num_flashblocks;
 	const fblock_t *flashblocks;
@@ -70,6 +71,7 @@ typedef struct {
 const hw_t *get_hw(uint8_t hw_type);
 uint32_t get_crc_startpos(uint8_t hw_type);
 uint32_t get_flash_offset(uint8_t hw_type);
+uint32_t get_max_blocksize(uint8_t hw_type);
 uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags);
 const char *get_hw_name(uint8_t hw_type);
 const char *get_flash_name(uint8_t flash_type);

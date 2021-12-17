@@ -47,6 +47,7 @@
 #include "crc16.h"
 
 #define PCF_MIN_TX_QUEUE 500
+#define BUFSZ 512 /* max. known block size */
 
 extern int optind, opterr, optopt;
 
@@ -63,7 +64,7 @@ void print_usage(char *prg)
 
 int main(int argc, char **argv)
 {
-	static uint8_t buf[BLKSZ+2];
+	static uint8_t buf[BUFSZ+2];
 	struct ifreq ifr;
 	struct sockaddr_can addr;
 	static struct can_frame modules[MAX_MODULES];
@@ -77,6 +78,7 @@ int main(int argc, char **argv)
 	int alternating_xor_flip;
 	uint32_t crc_start;
 	uint32_t floffset;
+	uint32_t blksz;
 	int opt, i;
 	uint8_t hw_type = 0;
 	long foffset;
@@ -250,7 +252,14 @@ int main(int argc, char **argv)
 			modules[module_id].can_dlc = DATA_LEN6;
 	}
 
-	printf("\nflashing module id %d with flash transfer data len %d\n", module_id, modules[module_id].can_dlc);
+	blksz = get_max_blocksize(hw_type);
+	if ((blksz > BUFSZ) || (blksz < 32)) {
+		fprintf(stderr, "\nmax_blocksize %d out of range!\n\n", blksz);
+		exit(1);
+	}
+
+	printf("\nflashing module id %d with flash transfer data len %d and block size %d\n",
+	       module_id, modules[module_id].can_dlc, blksz);
 
 	if (has_hw_flags(hw_type, SWITCH_TO_BOOTLOADER)) { /* PPCAN mode modules */
 		printf("\nswitch module into bootloader ... ");
@@ -283,19 +292,19 @@ int main(int argc, char **argv)
 		if (fseek(infile, foffset, SEEK_SET))
 			break;
 
-		memset(&buf, 0xFF, sizeof(buf));
-		fread(buf, 1, BLKSZ, infile);
+		memset(&buf, 0xFF, blksz);
+		fread(buf, 1, blksz, infile);
 
-		for (i = 0; i < BLKSZ; i++) {
+		for (i = 0; i < blksz; i++) {
 			if (buf[i] != EMPTY)
 				break;
 		}
 
 		/* non-empty block (not all bytes are EMPTY / 0xFFU) */
-		if (i != BLKSZ) {
+		if (i != blksz) {
 
 			/* check whether we need to patch the CRC array */
-			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + BLKSZ)) {
+			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + blksz)) {
 
 				/* access crc_array */
 				ca = (crc_array_t *)&buf[crc_start - foffset];
@@ -316,13 +325,13 @@ int main(int argc, char **argv)
 			}
 
 			/* write non-empty block */
-			write_block(s, dry_run, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip, modules[module_id].can_dlc);
+			write_block(s, dry_run, module_id, foffset + floffset, blksz, buf, alternating_xor_flip, modules[module_id].can_dlc);
 		}
 
 		if (feof(infile))
 			break;
 
-		foffset += BLKSZ;
+		foffset += blksz;
 
 	} /* while (1) */
 

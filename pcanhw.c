@@ -65,6 +65,16 @@ uint32_t get_flash_offset(uint8_t hw_type)
 	return 0; /* disabled */
 }
 
+uint32_t get_max_blocksize(uint8_t hw_type)
+{
+	const hw_t *hwt = get_hw(hw_type);
+
+	if (hwt)
+		return hwt->max_blocksize;
+
+	return 0; /* disabled */
+}
+
 uint32_t has_hw_flags(uint8_t hw_type, const uint32_t flags)
 {
 	const hw_t *hwt = get_hw(hw_type);

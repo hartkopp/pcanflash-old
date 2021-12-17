@@ -522,7 +522,7 @@ void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_
 	uint8_t status;
 	uint16_t csum;
 
-	for (i = 0, csum = 0; i < BLKSZ; i++)
+	for (i = 0, csum = 0; i < blksz; i++)
 		csum = (csum + *(buf +i)) & 0xFFFFU;
 
 	printf ("writing non empty block at offset 0x%X with csum 0x%04X\n",
@@ -535,7 +535,7 @@ void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_
 		exit(1);
 	}
 	
-	set_blocksize(s, module_id, BLKSZ);
+	set_blocksize(s, module_id, blksz);
 	status = get_status(s, module_id, NULL);
 	if ((status & (SET_STARTADDR | SET_LENGTH)) != (SET_STARTADDR | SET_LENGTH)) {
 		fprintf(stderr, "flash2 - wrong status %02X!\n", status);
@@ -552,14 +552,14 @@ void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_
 		frame.data[1] = 0xFF;
 	}
 
-	for (i = 0; i < BLKSZ; i += ftd_len, xor_flip ^= 1) {
+	for (i = 0; i < blksz; i += ftd_len, xor_flip ^= 1) {
 
 		uint8_t len = ftd_len;
 
-		if ((ftd_len == DATA_LEN6) && (i + ftd_len >= BLKSZ)) {
+		if ((ftd_len == DATA_LEN6) && (i + ftd_len >= blksz)) {
 			/* last frame for DATA_LEN6 */
 			memset(&frame.data[2], 0, DATA_LEN6);
-			len = BLKSZ - i;
+			len = blksz - i;
 		}
 
 		for (j = 0; j < len; j++)
