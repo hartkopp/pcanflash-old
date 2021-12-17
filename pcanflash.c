@@ -242,7 +242,15 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	printf("\nflashing module id : %d\n", module_id);
+	/* take default values when not provided by JSON config */
+	if (modules[module_id].can_dlc == NO_DATA_LEN) {
+		if (has_hw_flags(hw_type, DATA_MODE8))
+			modules[module_id].can_dlc = DATA_LEN8;
+		else
+			modules[module_id].can_dlc = DATA_LEN6;
+	}
+
+	printf("\nflashing module id %d with flash transfer data len %d\n", module_id, modules[module_id].can_dlc);
 
 	if (has_hw_flags(hw_type, SWITCH_TO_BOOTLOADER)) { /* PPCAN mode modules */
 		printf("\nswitch module into bootloader ... ");
@@ -308,7 +316,7 @@ int main(int argc, char **argv)
 			}
 
 			/* write non-empty block */
-			write_block(s, dry_run, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip);
+			write_block(s, dry_run, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip, modules[module_id].can_dlc);
 		}
 
 		if (feof(infile))

@@ -44,6 +44,10 @@ typedef struct {
 #define MAX_MODULES 64
 #define MAX_MODULES_MASK 0x3F /* '64 - 1' bit mask */
 
+#define NO_DATA_LEN 0
+#define DATA_LEN6 6
+#define DATA_LEN8 8
+
 typedef struct {
 	const char name[HW_NAME_MAX_LEN];
 	const char ch_file[HW_NAME_MAX_LEN];
@@ -61,6 +65,7 @@ typedef struct {
 #define SWITCH_TO_BOOTLOADER	(1<<1)
 #define RESET_AFTER_FLASH	(1<<2)
 #define END_PROGRAMMING		(1<<3)
+#define DATA_MODE8		(1<<4)
 
 const hw_t *get_hw(uint8_t hw_type);
 uint32_t get_crc_startpos(uint8_t hw_type);

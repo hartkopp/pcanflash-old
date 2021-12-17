@@ -102,6 +102,7 @@ int query_modules(int s, struct can_frame *modules)
 				fprintf(stderr, "received second module with ID %d!\n", my_id);
 				exit(1);
 			}
+			frame.can_dlc = NO_DATA_LEN; /* prepare data mode storage */
 			memcpy(modules + my_id, &frame, sizeof(struct can_frame));
 			entries++;
 		}
@@ -477,10 +478,30 @@ json_read_loop:
 					       cf->data[3], get_hw_name(cf->data[3]),
 					       cf->data[4], get_flash_name(cf->data[4]));
 
-				} else  {
+				} else {
 					fprintf(stderr, "JSON buffer parse error (%s)!\n", J_HWTYPE);
 					exit(1);
 				}
+				restorejsonstring(&ptr);
+			}
+
+			ptr = findjsonstring(buf, J_DATAMODE);
+			if (ptr) {
+				if (modules->can_dlc != NO_DATA_LEN) {
+					fprintf(stderr, "JSON datamode not empty!\n");
+					exit(1);
+				}
+
+				if (*ptr == '0')
+					modules->can_dlc = DATA_LEN6;
+				else if (*ptr == '1')
+					modules->can_dlc = DATA_LEN8;
+				else {
+					fprintf(stderr, "JSON unknown datamode '%c'!\n", *ptr);
+					exit(1);
+				}
+				printf(" - datamode %c => flash transfer data len %d\n", *ptr, modules->can_dlc);
+
 				restorejsonstring(&ptr);
 			}
 
@@ -494,7 +515,7 @@ json_read_loop:
 	exit(1);
 }
 
-void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip)
+void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len)
 {
 	struct can_frame frame;
 	int i, j;

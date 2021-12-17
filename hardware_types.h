@@ -36,7 +36,7 @@ const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
 		   unknownflashid};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0x03DF00, /* CRC start */
 		   0, /* flash offset */
 		   12, /* Flash ID type */
@@ -60,7 +60,7 @@ const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
 		   unknownflashid};
 
 const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
-		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH),
+		   (FDATA_INVERT | DATA_MODE8 | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH),
 		   0x03DF00, /* CRC start */
 		   0, /* flash offset */
 		   12, /* Flash ID type */
@@ -68,7 +68,7 @@ const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
 		   flashid12};
 
 const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0x03DF00, /* CRC start */
 		   0, /* flash offset */
 		   12, /* Flash ID type */
@@ -76,7 +76,7 @@ const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
 		   flashid12};
 
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0x03DF00, /* CRC start */
 		   0, /* flash offset */
 		   12, /* Flash ID type */
@@ -84,7 +84,7 @@ const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
 		   flashid12};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0x000100, /* CRC start */
 		   0, /* flash offset */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
@@ -92,7 +92,7 @@ const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   unknownflashid};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
-		   (FDATA_INVERT | END_PROGRAMMING),
+		   (FDATA_INVERT | DATA_MODE8 | END_PROGRAMMING),
 		   0, /* CRC start */
 		   0, /* flash offset */
 		   40, /* Flash ID type */
@@ -100,7 +100,7 @@ const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   flashid40};
 
 const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0, /* CRC start */
 		   0, /* flash offset */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
@@ -108,7 +108,7 @@ const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
 		   unknownflashid};
 
 const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
-		   (FDATA_INVERT),
+		   (FDATA_INVERT | DATA_MODE8),
 		   0, /* CRC start */
 		   0, /* flash offset */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */

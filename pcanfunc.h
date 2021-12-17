@@ -41,7 +41,7 @@ void reset_module(int s, uint8_t module_id);
 void end_programming(int s, uint8_t module_id);
 uint8_t get_status(int s, uint8_t module_id, struct can_frame *cf);
 uint8_t get_json_config(int s, uint8_t module_id, struct can_frame *modules, struct can_frame *cf);
-void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip);
+void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len);
 void erase_block(int s, int dry_run, uint8_t module_id, uint32_t startaddr, uint32_t blksz);
 void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id, uint8_t hw_type, int index);
 int check_ch_name(FILE *infile, uint8_t hw_type);
