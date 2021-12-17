@@ -518,7 +518,7 @@ json_read_loop:
 void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len)
 {
 	struct can_frame frame;
-	int i, j;
+	int i, j, xor_flip;
 	uint8_t status;
 	uint16_t csum;
 
@@ -544,15 +544,30 @@ void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_
 
 	frame.can_id = CAN_ID;
 	frame.can_dlc = 8;
+	xor_flip = 0;
 
-	for (i = 0; i < BLKSZ; i += 8) {
+	/* prepare frame for DATA_LEN6 */
+	if (ftd_len == DATA_LEN6) {
+		frame.data[0] = 0x7F;
+		frame.data[1] = 0xFF;
+	}
 
-		for (j = 0; j < 8; j++)
-			frame.data[j] = *(buf + i + j);
+	for (i = 0; i < BLKSZ; i += ftd_len, xor_flip ^= 1) {
 
-		if ((i & 8) && (alternating_xor_flip)) {
-			for (j = 0; j < 8; j++)
-				frame.data[j] ^= 0xFF;
+		uint8_t len = ftd_len;
+
+		if ((ftd_len == DATA_LEN6) && (i + ftd_len >= BLKSZ)) {
+			/* last frame for DATA_LEN6 */
+			memset(&frame.data[2], 0, DATA_LEN6);
+			len = BLKSZ - i;
+		}
+
+		for (j = 0; j < len; j++)
+			frame.data[j + (8 - ftd_len)] = *(buf + i + j);
+
+		if ((xor_flip) && (alternating_xor_flip)) {
+			for (j = 0; j < len; j++)
+				frame.data[j + (8 - ftd_len)] ^= 0xFF;
 		}
 
 		if (write(s, &frame, sizeof(struct can_frame)) != sizeof(struct can_frame)) {
