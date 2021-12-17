@@ -43,6 +43,7 @@ typedef struct {
 
 #define MAX_MODULES 64
 #define MAX_MODULES_MASK 0x3F /* '64 - 1' bit mask */
+#define NO_MODULE_ID MAX_MODULES /* as we have module IDs 0 .. 63 */
 
 #define NO_DATA_LEN 0
 #define DATA_LEN6 6

@@ -27,7 +27,6 @@
 
 #include <stdint.h>
 
-#define NO_MODULE_ID 16
 #define CAN_ID 0x7E7
 
 #define SET_STARTADDR   (1 << 0) // 01
