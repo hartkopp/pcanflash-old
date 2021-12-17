@@ -494,7 +494,7 @@ json_read_loop:
 	exit(1);
 }
 
-void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip)
+void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip)
 {
 	struct can_frame frame;
 	int i, j;
@@ -554,22 +554,24 @@ void write_block(int s, uint8_t module_id, uint32_t offset, uint32_t blksz, uint
 		exit(1);
 	}
 	
-	start_programming(s, module_id);
-	status = get_status(s, module_id, NULL);
-	if (status != (SET_CHECKSUM_OK)) {
-		fprintf(stderr, "flash5 - wrong status %02X!\n", status);
-		exit(1);
-	}
+	if (!dry_run) {
+		start_programming(s, module_id);
+		status = get_status(s, module_id, NULL);
+		if (status != (SET_CHECKSUM_OK)) {
+			fprintf(stderr, "flash5 - wrong status %02X!\n", status);
+			exit(1);
+		}
 	
-	verify(s, module_id);
-	status = get_status(s, module_id, NULL);
-	if (status != (SET_CHECKSUM_OK | SET_VERIFY_OK)) {
-		fprintf(stderr, "flash6 - wrong status %02X!\n", status);
-		exit(1);
+		verify(s, module_id);
+		status = get_status(s, module_id, NULL);
+		if (status != (SET_CHECKSUM_OK | SET_VERIFY_OK)) {
+			fprintf(stderr, "flash6 - wrong status %02X!\n", status);
+			exit(1);
+		}
 	}
 }
 
-void erase_block(int s, uint8_t module_id, uint32_t startaddr, uint32_t blksz)
+void erase_block(int s, int dry_run, uint8_t module_id, uint32_t startaddr, uint32_t blksz)
 {
 	uint8_t status;
 
@@ -578,27 +580,29 @@ void erase_block(int s, uint8_t module_id, uint32_t startaddr, uint32_t blksz)
 
 	set_startaddress(s, module_id, startaddr);
 	status = get_status(s, module_id, NULL);
-	if (status != (SET_CHECKSUM_OK | SET_STARTADDR)) {
+	if ((!dry_run) && (status != (SET_CHECKSUM_OK | SET_STARTADDR))) {
 		fprintf(stderr, "erase1 - wrong status %02X!\n", status);
 		exit(1);
 	}
 	
 	set_blocksize(s, module_id, blksz);
 	status = get_status(s, module_id, NULL);
-	if (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH)) {
+	if ((!dry_run) && (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH))) {
 		fprintf(stderr, "erase2 - wrong status %02X!\n", status);
 		exit(1);
 	}
 	
-	erase_sector(s, module_id);
-	status = get_status(s, module_id, NULL);
-	if (status != (SET_CHECKSUM_OK | SET_ERASE_OK)) {
-		fprintf(stderr, "erase3 - wrong status %02X!\n", status);
-		exit(1);
+	if (!dry_run) {
+		erase_sector(s, module_id);
+		status = get_status(s, module_id, NULL);
+		if (status != (SET_CHECKSUM_OK | SET_ERASE_OK)) {
+			fprintf(stderr, "erase3 - wrong status %02X!\n", status);
+			exit(1);
+		}
 	}
 }
 
-void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, int index)
+void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id, uint8_t hw_type, int index)
 {
 	const fblock_t *fblock;
 	uint8_t data;
@@ -635,7 +639,7 @@ void erase_flashblocks(int s, FILE *infile, uint8_t module_id, uint8_t hw_type, 
 	if (i == fblock->len)
 		return;
 
-	erase_block(s, module_id, fblock->start, fblock->len);
+	erase_block(s, dry_run, module_id, fblock->start, fblock->len);
 }
 
 int check_ch_name(FILE *infile, uint8_t hw_type)

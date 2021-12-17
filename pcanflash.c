@@ -57,6 +57,7 @@ void print_usage(char *prg)
 	fprintf(stderr, "         -i <module_id> (skip question when discovering multiple ids)\n");
 	fprintf(stderr, "         -q             (just query modules and quit)\n");
 	fprintf(stderr, "         -r             (reset module after flashing)\n");
+	fprintf(stderr, "         -d             (dry run - skip erase/write commands)\n");
 	fprintf(stderr, "\n");
 }
 
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
 	static FILE *infile;
 	static int query;
 	static int do_reset;
+	static int dry_run;
 	int module_id = NO_MODULE_ID;
 	int alternating_xor_flip;
 	uint32_t crc_start;
@@ -81,7 +83,7 @@ int main(int argc, char **argv)
 	int entries;
 	crc_array_t *ca;
 
-	while ((opt = getopt(argc, argv, "f:i:qr?")) != -1) {
+	while ((opt = getopt(argc, argv, "f:i:qrd?")) != -1) {
 		switch (opt) {
 		case 'f':
 			infile = fopen(optarg, "r");
@@ -101,6 +103,10 @@ int main(int argc, char **argv)
 
 		case 'r':
 			do_reset = 1;
+			break;
+
+		case 'd':
+			dry_run = 1;
 			break;
 
 		case '?':
@@ -256,7 +262,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	for (i = 0; i < entries; i++)
-		erase_flashblocks(s, infile, module_id, hw_type, i);
+		erase_flashblocks(s, dry_run, infile, module_id, hw_type, i);
 
 	printf("\nwriting flash blocks:\n");
 	foffset = 0;
@@ -302,7 +308,7 @@ int main(int argc, char **argv)
 			}
 
 			/* write non-empty block */
-			write_block(s, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip);
+			write_block(s, dry_run, module_id, foffset + floffset, BLKSZ, buf, alternating_xor_flip);
 		}
 
 		if (feof(infile))
