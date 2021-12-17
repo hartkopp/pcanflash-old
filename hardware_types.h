@@ -100,12 +100,12 @@ const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   flashid40};
 
 const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
-		   (FDATA_INVERT | DATA_MODE8),
+		   (FDATA_INVERT | DATA_MODE8 | END_PROGRAMMING),
 		   0, /* CRC start */
 		   0, /* flash offset */
-		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
-		   unknownflashid};
+		   42, /* Flash ID type */
+		   sizeof(flashid42) / sizeof(fblock_t),
+		   flashid42};
 
 const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
 		   (FDATA_INVERT | DATA_MODE8),
