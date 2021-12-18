@@ -44,7 +44,6 @@
 #include "pcanflash.h"
 #include "pcanfunc.h"
 #include "pcanhw.h"
-#include "crc16.h"
 
 #define PCF_MIN_TX_QUEUE 500
 #define BUFSZ 512 /* max. known block size */
@@ -83,7 +82,6 @@ int main(int argc, char **argv)
 	uint8_t hw_type = 0;
 	long foffset;
 	int entries;
-	crc_array_t *ca;
 
 	while ((opt = getopt(argc, argv, "f:i:qrd?")) != -1) {
 		switch (opt) {
@@ -310,25 +308,8 @@ int main(int argc, char **argv)
 		if (i != blksz) {
 
 			/* check whether we need to patch the CRC array */
-			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + blksz)) {
-
-				/* access crc_array */
-				ca = (crc_array_t *)&buf[crc_start - foffset];
-				if (!strcmp((const char *)ca->str, CRC_IDENT_STRING)) {
-					printf(" CRC array ver=0x%X D/M/Y=%d/%d/%d mode=%d found at 0x%X\n",
-					       ca->version, ca->day, ca->month, ca->year, ca->mode, crc_start);
-
-					if ((ca->mode == 1) || (ca->mode == 3) || (ca->mode == 4)) {
-						for (i = 0; i < ca->count; i++) {
-							ca->block[i].crc = calc_crc16(infile, ca->block[i].address, ca->block[i].len);
-							printf(" CRC block[%d] .address=0x%X  .len=0x%X	 .crc=0x%X\n",
-							       i, ca->block[i].address, ca->block[i].len, ca->block[i].crc);
-						}
-					} else
-						printf(" CRC array mode=%d is not supported - omit  patching of CRC value.\n", ca->mode);
-				} else
-					fprintf(stderr, " no CRC Ident string found - omit  patching of CRC value.\n");
-			}
+			if ((crc_start) && (crc_start >= foffset) && (crc_start < foffset + blksz))
+				write_crc_array(&buf[crc_start - foffset], infile, crc_start);
 
 			/* write non-empty block */
 			write_block(s, dry_run, module_id, foffset + floffset, blksz, buf, alternating_xor_flip, modules[module_id].can_dlc);

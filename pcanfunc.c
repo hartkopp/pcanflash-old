@@ -40,6 +40,7 @@
 
 #include "pcanflash.h"
 #include "pcanhw.h"
+#include "crc16.h"
 
 #define JSON_BUF_LEN 8000
 
@@ -513,6 +514,29 @@ json_read_loop:
 
 	fprintf(stderr, "timeout in get_status process!\n");
 	exit(1);
+}
+
+void write_crc_array(uint8_t *buf, FILE *infile, uint32_t crc_start)
+{
+	crc_array_t *ca = (crc_array_t *)buf;
+	int i;
+
+	if (strcmp((const char *)ca->str, CRC_IDENT_STRING)) {
+		fprintf(stderr, " no CRC Ident string found - omit patching of CRC value.\n");
+		return;
+	}
+
+	printf(" CRC array ver=0x%X D/M/Y=%d/%d/%d mode=%d found at 0x%X\n",
+	       ca->version, ca->day, ca->month, ca->year, ca->mode, crc_start);
+
+	if ((ca->mode == 1) || (ca->mode == 3) || (ca->mode == 4)) {
+		for (i = 0; i < ca->count; i++) {
+			ca->block[i].crc = calc_crc16(infile, ca->block[i].address, ca->block[i].len);
+			printf(" CRC block[%d] .address=0x%X  .len=0x%X	 .crc=0x%X\n",
+			       i, ca->block[i].address, ca->block[i].len, ca->block[i].crc);
+		}
+	} else
+		printf(" CRC array mode=%d is not supported - omit patching of CRC value.\n", ca->mode);
 }
 
 void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len)
