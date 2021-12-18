@@ -238,6 +238,12 @@ int main(int argc, char **argv)
 	/* restore hw_type of this module_id index from data[7] */
 	hw_type = modules[module_id].data[7];
 
+	if (get_hw(hw_type) == NULL) {
+		fprintf(stderr, "\nno flash configuration available for hardware type %d!\n\n",
+			hw_type);
+		exit(1);
+	}
+
 	if (check_ch_name(infile, hw_type)) {
 		fprintf(stderr, "\nno ch_filename in bin-file for hardware type %d (%s)!\n\n",
 			hw_type, get_hw_name(hw_type));

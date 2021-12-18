@@ -39,7 +39,7 @@
 
 const hw_t *get_hw(uint8_t hw_type)
 {
-	if (hw_type > 44)
+	if (hw_type > (sizeof(hwtab)/sizeof(*hwtab)) - 1)
 		return NULL; /* unknown */
 
 	return hwtab[hw_type];
@@ -109,5 +109,8 @@ int check_flash_id_type(uint8_t hw_type, uint8_t flash_id_type)
 {
 	const hw_t *hwt = get_hw(hw_type);
 
-	return (hwt->flash_id_type != flash_id_type);
+	if (hwt)
+		return (hwt->flash_id_type != flash_id_type);
+	else
+		return 1; /* no hardware type found => always fail */
 }
