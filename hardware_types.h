@@ -28,13 +28,13 @@
 /* hardware type descriptions */
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
-		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | RESET_AFTER_FLASH),
+		   (FDATA_INVERT | SWITCH_TO_BOOTLOADER | END_PROGRAMMING | RESET_AFTER_FLASH),
 		   0, /* CRC start */
-		   0, /* flash offset */
+		   0xFF0000, /* flash offset */
 		   64, /* max blocksize */
-		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
-		   unknownflashid};
+		   4, /* Flash ID type */
+		   sizeof(flashid4) / sizeof(fblock_t),
+		   flashid4};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
 		   (FDATA_INVERT | DATA_MODE8),

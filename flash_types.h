@@ -27,6 +27,13 @@
 
 /* flash block layouts */
 
+const fblock_t flashid4[] = {
+	{0xFF0000, 0x8000, false},
+	{0xFF8000, 0x2000, false},
+	{0xFFA000, 0x2000, false},
+	{0xFFC000, 0x4000, false}
+};
+
 const fblock_t flashid12[] = {
 	{0x2000, 0x2000, false},
 	{0x4000, 0x2000, false},
