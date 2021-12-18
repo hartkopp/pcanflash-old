@@ -616,14 +616,14 @@ void erase_block(int s, int dry_run, uint8_t module_id, uint32_t startaddr, uint
 
 	set_startaddress(s, module_id, startaddr);
 	status = get_status(s, module_id, NULL);
-	if ((!dry_run) && (status != (SET_CHECKSUM_OK | SET_STARTADDR))) {
+	if ((!dry_run) && ((status & SET_STARTADDR) != SET_STARTADDR)) {
 		fprintf(stderr, "erase1 - wrong status %02X!\n", status);
 		exit(1);
 	}
 	
 	set_blocksize(s, module_id, blksz);
 	status = get_status(s, module_id, NULL);
-	if ((!dry_run) && (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH))) {
+	if ((!dry_run) && ((status & (SET_STARTADDR | SET_LENGTH)) != (SET_STARTADDR | SET_LENGTH))) {
 		fprintf(stderr, "erase2 - wrong status %02X!\n", status);
 		exit(1);
 	}
@@ -631,7 +631,7 @@ void erase_block(int s, int dry_run, uint8_t module_id, uint32_t startaddr, uint
 	if (!dry_run) {
 		erase_sector(s, module_id);
 		status = get_status(s, module_id, NULL);
-		if (status != (SET_CHECKSUM_OK | SET_ERASE_OK)) {
+		if ((status & SET_ERASE_OK) != SET_ERASE_OK) {
 			fprintf(stderr, "erase3 - wrong status %02X!\n", status);
 			exit(1);
 		}
