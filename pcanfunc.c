@@ -516,6 +516,44 @@ json_read_loop:
 	exit(1);
 }
 
+int eval_modules(int s, int module_id, struct can_frame *modules)
+{
+	struct can_frame cf;
+
+	/* get status for this found module */
+	get_status(s, module_id, &cf);
+
+	/* hardware type or flash type is 250 => get info via JSON config string */
+	if ((cf.data[3] == 250) || (cf.data[4] == 250)) {
+		if (get_json_config(s, module_id, modules, &cf)) {
+			fprintf(stderr, "\nError reading the JSON configuration string!\n\n");
+			exit(1);
+		}
+	} else {
+		printf("module id %02d (ppcan hw id %d)\n",
+		       module_id,
+		       ((modules->data[0] << 2) | (modules->data[1] >> 6)) & 0xFF);
+
+		printf(" - date %02X.%02X.20%02X bootloader v%d.%d\n",
+		       modules->data[3], modules->data[4], modules->data[5],
+		       modules->data[6] >> 5, modules->data[6] & 0x1F);
+
+		printf(" - hardware %d (%s) flash type %d (%s)\n",
+		       cf.data[3], get_hw_name(cf.data[3]),
+		       cf.data[4], get_flash_name(cf.data[4]));
+	}
+	/* check if hardware fits to known flash id type */
+	if (check_flash_id_type(cf.data[3], cf.data[4])) {
+		fprintf(stderr, "\nFlash ID type does not match the hardware ID!\n\n");
+		return 1;
+	}
+
+	/* store hw_type for this module_id index in data[7] */
+	modules->data[7] = cf.data[3];
+
+	return 0;
+}
+
 void write_crc_array(uint8_t *buf, FILE *infile, uint32_t crc_start)
 {
 	crc_array_t *ca = (crc_array_t *)buf;
