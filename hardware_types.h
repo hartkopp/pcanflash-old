@@ -25,6 +25,8 @@
  *
  */
 
+#define FLASH_BLOCK_ENTRIES(fb) (sizeof(fb) / sizeof(fblock_t))
+
 /* hardware type descriptions */
 
 const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
@@ -33,7 +35,7 @@ const hw_t hwt4 = {"PCAN-Micromod", "PCAN_MicroMod",
 		   0xFF0000, /* flash offset */
 		   64, /* max blocksize */
 		   4, /* Flash ID type */
-		   sizeof(flashid4) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid4),
 		   flashid4};
 
 const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
@@ -42,7 +44,7 @@ const hw_t hwt16 = {"PCAN-Router", "PCAN-Router",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   12, /* Flash ID type */
-		   sizeof(flashid12) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid12),
 		   flashid12};
 
 const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
@@ -51,7 +53,7 @@ const hw_t hwt19 = {"PCAN-MIO (32-bit)", "PCAN_MIOV4",
 		   0, /* flash offset */
 		   256, /* max blocksize */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(unknownflashid),
 		   unknownflashid};
 
 const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
@@ -60,7 +62,7 @@ const hw_t hwt21 = {"MU-Thermocouple1 CAN", "PCAN-MU",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(unknownflashid),
 		   unknownflashid};
 
 const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
@@ -69,7 +71,7 @@ const hw_t hwt25 = {"PCAN-Router Pro", "PCAN-Router_Pro",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   12, /* Flash ID type */
-		   sizeof(flashid12) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid12),
 		   flashid12};
 
 const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
@@ -78,7 +80,7 @@ const hw_t hwt31 = {"PCAN-RS-232", "PCAN-RS-232",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   12, /* Flash ID type */
-		   sizeof(flashid12) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid12),
 		   flashid12};
 
 const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
@@ -87,7 +89,7 @@ const hw_t hwt35 = {"PCAN-Router DR", "PCAN-Router-DR",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   12, /* Flash ID type */
-		   sizeof(flashid12) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid12),
 		   flashid12};
 
 const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
@@ -96,7 +98,7 @@ const hw_t hwt37 = {"PCAN-GPS", "PCAN-GPS",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(unknownflashid),
 		   unknownflashid};
 
 const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
@@ -105,7 +107,7 @@ const hw_t hwt40 = {"PCAN-Router FD", "PCAN-Router_FD",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   40, /* Flash ID type */
-		   sizeof(flashid40) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid40),
 		   flashid40};
 
 const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
@@ -114,7 +116,7 @@ const hw_t hwt42 = {"PCAN-Router Pro FD", "PCAN-Router_Pro_FD",
 		   0, /* flash offset */
 		   512, /* max blocksize */
 		   42, /* Flash ID type */
-		   sizeof(flashid42) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(flashid42),
 		   flashid42};
 
 const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
@@ -123,7 +125,7 @@ const hw_t hwt43 = {"PCAN-MiniDiag FD", "PCAN-MiniDiag-FD",
 		   0, /* flash offset */
 		   256, /* max blocksize */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(unknownflashid),
 		   unknownflashid};
 
 const hw_t hwt44 = {"PCAN-MicroMod FD", "PCAN-MicroMod-FD",
@@ -132,7 +134,7 @@ const hw_t hwt44 = {"PCAN-MicroMod FD", "PCAN-MicroMod-FD",
 		   0, /* flash offset */
 		   256, /* max blocksize */
 		   UNKNOWN_FLASH_ID, /* Flash ID type */
-		   sizeof(unknownflashid) / sizeof(fblock_t),
+		   FLASH_BLOCK_ENTRIES(unknownflashid),
 		   unknownflashid};
 
 /* index table for fast hw_type referencing */
