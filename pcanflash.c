@@ -282,7 +282,8 @@ int main(int argc, char **argv)
 				write_crc_array(&buf[crc_start - foffset], infile, crc_start);
 
 			/* write non-empty block */
-			write_block(s, dry_run, module_id, foffset + floffset, blksz, buf, alternating_xor_flip, modules[module_id].can_dlc);
+			write_block(s, dry_run, module_id, foffset + floffset, blksz,
+				    buf, alternating_xor_flip, modules[module_id].can_dlc);
 		}
 
 		if (feof(infile))

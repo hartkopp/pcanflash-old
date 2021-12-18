@@ -501,7 +501,8 @@ json_read_loop:
 					fprintf(stderr, "JSON unknown datamode '%c'!\n", *ptr);
 					exit(1);
 				}
-				printf(" - datamode %c => flash transfer data len %d\n", *ptr, modules->can_dlc);
+				printf(" - datamode %c => flash transfer data len %d\n",
+				       *ptr, modules->can_dlc);
 
 				restorejsonstring(&ptr);
 			}
@@ -569,15 +570,18 @@ void write_crc_array(uint8_t *buf, FILE *infile, uint32_t crc_start)
 
 	if ((ca->mode == 1) || (ca->mode == 3) || (ca->mode == 4)) {
 		for (i = 0; i < ca->count; i++) {
-			ca->block[i].crc = calc_crc16(infile, ca->block[i].address, ca->block[i].len);
+			ca->block[i].crc = calc_crc16(infile, ca->block[i].address,
+						      ca->block[i].len);
 			printf(" CRC block[%d] .address=0x%X  .len=0x%X	 .crc=0x%X\n",
 			       i, ca->block[i].address, ca->block[i].len, ca->block[i].crc);
 		}
 	} else
-		printf(" CRC array mode=%d is not supported - omit patching of CRC value.\n", ca->mode);
+		printf(" CRC array mode=%d is not supported - omit patching of CRC value.\n",
+		       ca->mode);
 }
 
-void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz, uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len)
+void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_t blksz,
+		 uint8_t *buf, uint32_t alternating_xor_flip, uint8_t ftd_len)
 {
 	struct can_frame frame;
 	int i, j, xor_flip;
@@ -648,7 +652,6 @@ void write_block(int s, int dry_run, uint8_t module_id, uint32_t offset, uint32_
 	status = get_status(s, module_id, NULL);
 	if (status != (SET_CHECKSUM_OK | SET_STARTADDR | SET_LENGTH | SET_CHECKSUM)) {
 		fprintf(stderr, "flash4 - wrong status %02X!\n", status);
-		fprintf(stderr, "Please check CAN netdevice tx-queue-len to avoid block data loss.\n");
 		exit(1);
 	}
 	
@@ -700,7 +703,8 @@ void erase_block(int s, int dry_run, uint8_t module_id, uint32_t startaddr, uint
 	}
 }
 
-void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id, uint8_t hw_type, int index)
+void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id,
+		       uint8_t hw_type, int index)
 {
 	const fblock_t *fblock;
 	uint8_t data;
