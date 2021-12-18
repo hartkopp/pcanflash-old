@@ -645,6 +645,7 @@ void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id, uint
 	int i;
 
 	const hw_t *hwt = get_hw(hw_type);
+	const uint32_t flash_offset = get_flash_offset(hw_type);
 
 	if (hwt)
 		fblock = &hwt->flashblocks[index];
@@ -658,8 +659,17 @@ void erase_flashblocks(int s, int dry_run, FILE *infile, uint8_t module_id, uint
 	if (fblock->skipped)
 		return;
 
+	/* check for wrong flash_offset configuration */
+	if (fblock->start < flash_offset) {
+		fprintf(stderr, "bad flashblock offset 0x%X for flashblock "
+			"start at 0x%X found for hardware type %d (%s)!\n",
+			flash_offset, fblock->start,
+			hw_type, get_hw_name(hw_type));
+		exit(1);
+	}
+
 	/* check block in bin-file */
-	if (fseek(infile, fblock->start, SEEK_SET))
+	if (fseek(infile, fblock->start - flash_offset, SEEK_SET))
 		return;
 
 	for (i = 0; i < fblock->len; i++) {
