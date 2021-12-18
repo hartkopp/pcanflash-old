@@ -702,7 +702,7 @@ int check_ch_name(FILE *infile, uint8_t hw_type)
 		if (fread(&buf[1], 1, HW_NAME_MAX_LEN - 1, infile) != HW_NAME_MAX_LEN - 1)
 			return 1;
 
-		if (!strncmp(buf, hwt->ch_file, HW_NAME_MAX_LEN))
+		if (!strncmp(buf, hwt->ch_file, strlen(hwt->ch_file)))
 			return 0; /* match */
 
 		/* no match -> rewind back behind the 'P' */
