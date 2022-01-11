@@ -91,6 +91,14 @@ int main(int argc, char **argv)
 				perror("infile");
 				return 1;
 			}
+			/* check the file length to fit into 16 MB */
+			fseek(infile, 0L, SEEK_END);
+			if (ftell(infile) > 0x1000000) {
+				printf("binary flash file too long!\n");
+				fclose(infile);
+				return 1;
+			}
+			rewind(infile);
 			break;
 
 		case 'i':
